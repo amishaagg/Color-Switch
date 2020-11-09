@@ -9,4 +9,5 @@ public class Obstacle extends GameElement
         return speed;
     }
 
+    public void move(){}
 }
