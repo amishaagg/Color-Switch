@@ -9,4 +9,7 @@ public class Star extends GameElement
     public int getValue() {
         return value;
     }
+    
+    public void vanish() //star will disappear if ball touches it
+    {}
 }
