@@ -1,4 +1,4 @@
-public class Star
+public class Star extends GameElement
 {
     int value;
 }
