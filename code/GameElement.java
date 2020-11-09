@@ -3,6 +3,7 @@ public class GameElement
     private int x;
     private int y;
     private int height;
+    private int width;
     public int getX() {
 		return x;
 	}
@@ -27,6 +28,6 @@ public class GameElement
 	public void setWidth(int width) {
 		this.width = width;
 	}
-	int width;
+	
 
 }
