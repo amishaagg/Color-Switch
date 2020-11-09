@@ -1,12 +1,19 @@
 public class Obstacle extends GameElement
 {
-    private int y;
+    //private int y;
     double speed;
-    public void setY(int y) {
-        this.y = y;
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 
-    public int getY() {
-        return y;
+    public double getSpeed() {
+        return speed;
     }
+//     public void setY(int y) {
+//         this.y = y;
+//     }
+
+//     public int getY() {
+//         return y;
+//     }
 }
