@@ -66,13 +66,13 @@ public class MainMenu extends Application implements Serializable
         Group layout1=new Group(imageView);
         layout1.getChildren().addAll(btnNewGame,btnResumeGame,btnExitGame);
         btnNewGame.setPrefWidth(80);
-        btnNewGame.setLayoutX(245);
+        btnNewGame.setLayoutX(250);
         btnNewGame.setLayoutY(250);
         btnResumeGame.setPrefWidth(80);
-        btnResumeGame.setLayoutX(245);
+        btnResumeGame.setLayoutX(250);
         btnResumeGame.setLayoutY(280);
         btnExitGame.setPrefWidth(80);
-        btnExitGame.setLayoutX(245);
+        btnExitGame.setLayoutX(250);
         btnExitGame.setLayoutY(310);
         scene1=new Scene(layout1,300,300);
         Label label=new Label("Yo I am list of games");
