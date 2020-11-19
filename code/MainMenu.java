@@ -6,6 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -41,36 +43,53 @@ public class MainMenu extends Application implements Serializable
             e.consume();
             exitGame();
         });
-        btnNewGame=new Button("New Game");
-        btnResumeGame=new Button("Resume");
+        btnNewGame=new Button();
+        Image play = new Image(new FileInputStream("assets/play.png"));
+        ImageView imageViewplay = new ImageView(play);
+        imageViewplay.setFitWidth(80);
+        imageViewplay.setFitHeight(80);
+        btnNewGame.setGraphic(imageViewplay);
+        btnNewGame.setBackground(Background.EMPTY);
+        btnResumeGame=new Button();
+        Image resume = new Image(new FileInputStream("assets/resume.png"));
+        ImageView imageViewResume = new ImageView(resume);
+        btnResumeGame.setGraphic(imageViewResume);
+        btnResumeGame.setBackground(Background.EMPTY);
         btnExitGame=new Button("Exit Game");
         btnreturn=new Button("Go back to main menu");
         Button b = new Button();
         btnNewGame.setOnAction(e->
         {
-            new Game(window);
+            window.hide();
+            try {
+                new Game(window);
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
         });
         btnResumeGame.setOnAction(e->resumeGame());
         btnExitGame.setOnAction(e->exitGame());
         btnreturn.setOnAction(e->window.setScene(scene1));
 
-        Image image = new Image(new FileInputStream("assets/MainMenuImage.jpg"));
+        Image image = new Image(new FileInputStream("assets/mainmenu.png"));
         ImageView imageView = new ImageView(image);
         imageView.setX(-5);
         imageView.setY(0);
-        imageView.setFitHeight(400);
-        imageView.setFitWidth(600);
-        window.setHeight(400);
-        window.setWidth(600);
-
-        Group layout1=new Group(imageView);
+        imageView.setFitHeight(700);
+        imageView.setFitWidth(400);
+        window.setHeight(700);
+        window.setWidth(400);
+        System.out.println(image.getHeight());
+        System.out.println(image.getWidth());
+        Group layout1 = new Group(imageView);
+        //layout1.getChildren().add(btnNewGame);
         layout1.getChildren().addAll(btnNewGame,btnResumeGame,btnExitGame);
         btnNewGame.setPrefWidth(80);
-        btnNewGame.setLayoutX(250);
-        btnNewGame.setLayoutY(250);
+        btnNewGame.setLayoutX(160);
+        btnNewGame.setLayoutY(300);
         btnResumeGame.setPrefWidth(80);
-        btnResumeGame.setLayoutX(250);
-        btnResumeGame.setLayoutY(280);
+        btnResumeGame.setLayoutX(100);
+        btnResumeGame.setLayoutY(480);
         btnExitGame.setPrefWidth(80);
         btnExitGame.setLayoutX(250);
         btnExitGame.setLayoutY(310);
