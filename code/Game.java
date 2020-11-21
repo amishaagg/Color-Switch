@@ -1,8 +1,5 @@
 package JavaFX;
-import com.sun.xml.internal.bind.v2.runtime.ClassBeanInfoImpl;
 import javafx.animation.RotateTransition;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,27 +7,22 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
-        import javafx.stage.Stage;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
-        import java.io.FileNotFoundException;
-        import java.util.ArrayList;
-        import java.util.Stack;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class Game
 {
@@ -103,22 +95,13 @@ public class Game
 
         String str = "17";
         Text score = new Text(10.0, 30.0, str);
-        //Setting the font bold and italic
         Font font = Font.font("Verdana", FontWeight.BOLD,  35);
         score.setFont(font);
-        //Setting the color of the text
         score.setFill(Color.WHITE);
 
 
         Arc arc = new Arc(150.0,300.0,100.0,100.0,0.0,90.0);
-//        arc.setCenterX(150.0f);
-//        arc.setCenterY(150.0f);
-//        arc.setRadiusX(125.0f);
-//        arc.setRadiusY(125.0f);
-//        arc.setStartAngle(0.0f);
-//        arc.setLength(90.0f);
         arc.setType(ArcType.ROUND);
-        arc.setFill(Color.rgb(250,225,0));
 
         Arc arc2 = new Arc();
         arc2.setCenterX(150.0f);
@@ -128,7 +111,6 @@ public class Game
         arc2.setStartAngle(90.0f);
         arc2.setLength(90.0f);
         arc2.setType(ArcType.ROUND);
-        arc2.setFill(Color.rgb(144, 13, 255));
 
         Arc arc3 = new Arc();
         arc3.setCenterX(150.0f);
@@ -138,7 +120,6 @@ public class Game
         arc3.setStartAngle(270.0f);
         arc3.setLength(90.0f);
         arc3.setType(ArcType.ROUND);
-        arc3.setFill(Color.rgb(255, 1, 129));
 
         Arc arc4 = new Arc();
         arc4.setCenterX(150.0f);
@@ -148,19 +129,9 @@ public class Game
         arc4.setStartAngle(180.0f);
         arc4.setLength(90.0f);
         arc4.setType(ArcType.ROUND);
-        arc4.setFill(Color.rgb(50, 219, 240));
 
-        Arc innerCircle = new Arc();
-        innerCircle.setCenterX(150.0f);
-        innerCircle.setCenterY(300.0f);
-        innerCircle.setRadiusX(80.0f);
-        innerCircle.setRadiusY(80.0f);
-        //arc.setStartAngle(90.0f);
-        innerCircle.setLength(360.0f);
+        Arc innerCircle = new Arc(150.0f,300.0f,80.0f,80.0f,0.0f,360.0f);
         innerCircle.setType(ArcType.ROUND);
-        innerCircle.setFill(Color.rgb(39,39,39));
-        //innerCircle.setFill(new ImagePattern(new Image(new FileInputStream("assets/star.png"))));
-
 
         Image star = new Image(new FileInputStream("assets/star.png"));
         ImageView starimageView = new ImageView(star);
@@ -178,7 +149,25 @@ public class Game
         colorswitcher_imageView.setFitHeight(45);
         colorswitcher_imageView.setFitWidth(55);
 
-        layout.getChildren().addAll(btnPause,arc,arc2,arc3,arc4,innerCircle,starimageView,score,ball,colorswitcher_imageView);
+        Shape shape1=Shape.subtract(arc,innerCircle);
+        shape1.setFill(Color.rgb(250,225,0));
+        Shape shape2=Shape.subtract(arc2,innerCircle);
+        shape2.setFill(Color.rgb(144, 13, 255));
+        Shape shape3=Shape.subtract(arc3,innerCircle);
+        shape3.setFill(Color.rgb(255, 1, 129));
+        Shape shape4=Shape.subtract(arc4,innerCircle);
+        shape4.setFill(Color.rgb(50, 219, 240));
+        Group obstaclegroup=new Group(shape1,shape2,shape3,shape4);
+
+        RotateTransition rotate = new RotateTransition();
+        rotate.setAxis(Rotate.Z_AXIS);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(500);
+        rotate.setDuration(Duration.millis(1000));
+        rotate.setNode(obstaclegroup);
+        rotate.play();
+
+        layout.getChildren().addAll(btnPause,starimageView,score,ball,colorswitcher_imageView,obstaclegroup);
         btnPause.setOnAction(e-> pause(window, primaryStage));
         scene.setFill(Color.rgb(39,39,39));
         window.setScene(scene);
