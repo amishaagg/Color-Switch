@@ -1,27 +1,42 @@
+import javafx.scene.shape.Circle;
+
 public class Ball extends GameElement
 {
-    private Player player;
     private String color;
-    public Ball(Player player)
+    private boolean alive;
+    private Circle circle;
+    public void jump()
     {
-        this.player=player;
+
+    };
+
+    public Ball(Circle circle, String color)
+    {
+        this.circle = circle;
+        this.color = color;
     }
-	public void jump() {
-		
-	}
-	public void increaseScore() {
-		
-	}
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
-	public String getColor() {
-		return color;
-	}
-	public void setColor(String color) {
-		this.color = color;
-	}
 
+    public Circle getCircle() {
+        return circle;
+    }
 
-    
+    public void setCircle(Circle circle) {
+        this.circle = circle;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 }
