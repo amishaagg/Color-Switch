@@ -1,7 +1,13 @@
-public class ColorSwitcher extends GameElement
+import javafx.scene.image.ImageView;
+
+public class ColorSwitcher
 {
-    public static void changeColor(Ball ball){
-        //change ball.color to some random value
+    private ImageView colorSwitcher;
+
+    public ColorSwitcher(ImageView colorSwitcher)
+    {
+        this.colorSwitcher = colorSwitcher;
     }
-        
+
+    public static void changeColor(Ball ball){};
 }
