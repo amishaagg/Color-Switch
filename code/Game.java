@@ -10,10 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -110,14 +107,19 @@ public class Game
         score_value.setFont(font);
         score_value.setLayoutY(10);
         score_value.setFill(Color.WHITE);
-        
+
         ImageView starimageView = new ImageView(new Image(new FileInputStream("assets/star.png")));
         getStars().add(new Star(starimageView)); //oops
         starimageView.setX(130.0f);
         starimageView.setY(275.0f);
         starimageView.setFitHeight(40);
         starimageView.setFitWidth(40);
-        
+
+        ImageView big_star = new ImageView(new Image(new FileInputStream("assets/big_star.png")));
+        getStars().add(new Star(big_star)); //oops
+        big_star.setLayoutX(120);
+        big_star.setLayoutY(50);
+
         Rectangle rectangle=new Rectangle(75,220,150,20);
         rectangle.setFill(Color.rgb(250,225,0));
         Rectangle rectangle2=new Rectangle(205,220,20,150);
@@ -127,7 +129,7 @@ public class Game
         Rectangle rectangle4=new Rectangle(75,220,20,150);
         rectangle4.setFill(Color.rgb(50,219,240));
         Group obstaclegroup2=new Group(rectangle,rectangle2,rectangle3,rectangle4,starimageView);
-
+        getObstacles().add(new Obstacle(obstaclegroup2)); //oops
 
         Arc arc = new Arc(150.0,300.0,100.0,100.0,0.0,90.0);
         arc.setType(ArcType.ROUND);
@@ -187,8 +189,15 @@ public class Game
         rotate.setCycleCount(Animation.INDEFINITE);
         rotate.setDuration(Duration.millis(5000));
         rotate.setNode(obstaclegroup);
-        rotate.setNode(obstaclegroup2);
         rotate.play();
+
+        RotateTransition rotate2 = new RotateTransition();
+        rotate2.setAxis(Rotate.Z_AXIS);
+        rotate2.setByAngle(360);
+        rotate2.setCycleCount(Animation.INDEFINITE);
+        rotate2.setDuration(Duration.millis(5000));
+        rotate2.setNode(obstaclegroup2);
+        rotate2.play();
 
         scene.setOnKeyPressed(e->
         {
@@ -203,6 +212,7 @@ public class Game
                 }
             }
         });
+        layout.getChildren().add(big_star);
         layout.getChildren().addAll(btnPause,starimageView,score_value,circle,colorswitcher_imageView,obstaclegroup,obstaclegroup2);
         btnPause.setOnAction(e-> {
             try {
@@ -313,6 +323,7 @@ public class Game
         continue_using_stars.setOnAction(e->
         {
             window.close();
+            ball.getCircle().setCenterY(ball.getCircle().getCenterY()+30);
             GameStage.show();
         });
         group.getChildren().addAll(restart, home, continue_using_stars, scoreImageView, HighScoreImageView);
