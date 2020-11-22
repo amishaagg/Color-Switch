@@ -110,6 +110,24 @@ public class Game
         score_value.setFont(font);
         score_value.setLayoutY(10);
         score_value.setFill(Color.WHITE);
+        
+        ImageView starimageView = new ImageView(new Image(new FileInputStream("assets/star.png")));
+        getStars().add(new Star(starimageView)); //oops
+        starimageView.setX(130.0f);
+        starimageView.setY(275.0f);
+        starimageView.setFitHeight(40);
+        starimageView.setFitWidth(40);
+        
+        Rectangle rectangle=new Rectangle(75,220,150,20);
+        rectangle.setFill(Color.rgb(250,225,0));
+        Rectangle rectangle2=new Rectangle(205,220,20,150);
+        rectangle2.setFill(Color.rgb(144,13,255));
+        Rectangle rectangle3=new Rectangle(75,350,150,20);
+        rectangle3.setFill(Color.rgb(255,1,129));
+        Rectangle rectangle4=new Rectangle(75,220,20,150);
+        rectangle4.setFill(Color.rgb(50,219,240));
+        Group obstaclegroup2=new Group(rectangle,rectangle2,rectangle3,rectangle4,starimageView);
+
 
         Arc arc = new Arc(150.0,300.0,100.0,100.0,0.0,90.0);
         arc.setType(ArcType.ROUND);
@@ -144,13 +162,6 @@ public class Game
         Arc innerCircle = new Arc(150.0f,300.0f,80.0f,80.0f,0.0f,360.0f);
         innerCircle.setType(ArcType.ROUND);
 
-        ImageView starimageView = new ImageView(new Image(new FileInputStream("assets/star.png")));
-        getStars().add(new Star(starimageView)); //oops
-        starimageView.setX(130.0f);
-        starimageView.setY(275.0f);
-        starimageView.setFitHeight(40);
-        starimageView.setFitWidth(40);
-
         Circle circle = new Circle(150, 550, 17, Color.rgb(250,225,0));
         ball = new Ball(circle, "Yellow"); //oops
 
@@ -176,6 +187,7 @@ public class Game
         rotate.setCycleCount(Animation.INDEFINITE);
         rotate.setDuration(Duration.millis(5000));
         rotate.setNode(obstaclegroup);
+        rotate.setNode(obstaclegroup2);
         rotate.play();
 
         scene.setOnKeyPressed(e->
@@ -191,7 +203,7 @@ public class Game
                 }
             }
         });
-        layout.getChildren().addAll(btnPause,starimageView,score_value,circle,colorswitcher_imageView,obstaclegroup);
+        layout.getChildren().addAll(btnPause,starimageView,score_value,circle,colorswitcher_imageView,obstaclegroup,obstaclegroup2);
         btnPause.setOnAction(e-> {
             try {
                 pause(window, primaryStage);
