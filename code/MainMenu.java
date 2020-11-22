@@ -46,7 +46,22 @@ public class MainMenu extends Application implements Serializable
 
 
     public void saveGame(){};
-    public void newGame(Stage stage) throws FileNotFoundException
+    public void newGame(Stage stage)
+    {
+        window.hide();
+        try {
+            new Game(window);
+        } catch (FileNotFoundException fileNotFoundException) {
+            fileNotFoundException.printStackTrace();
+        }
+    };
+    public void exitGame()
+    {
+        window.close();
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception
     {
         window = stage;
         window.setTitle("Color Switch");
@@ -74,16 +89,10 @@ public class MainMenu extends Application implements Serializable
         imageViewExit.setFitWidth(40);
         btnExitGame.setGraphic(imageViewExit);
         btnExitGame.setBackground(Background.EMPTY);
-        btnNewGame.setOnAction(e->
+        btnNewGame.setOnAction(e->newGame(window));
+        btnResumeGame.setOnAction(e->
         {
             window.hide();
-            try {
-                new Game(window);
-            } catch (FileNotFoundException fileNotFoundException) {
-                fileNotFoundException.printStackTrace();
-            }
-        });
-        btnResumeGame.setOnAction(e-> {
             try {
                 resumeGame();
             } catch (FileNotFoundException fileNotFoundException) {
@@ -114,20 +123,12 @@ public class MainMenu extends Application implements Serializable
         scene1=new Scene(layout1,300,300);
         window.setScene(scene1);
         window.show();
-    };
-    public void exitGame()
-    {
-        window.close();
     }
 
-    @Override
-    public void start(Stage stage) throws Exception
+    public void resumeGame() throws FileNotFoundException
     {
-        newGame(stage);
-    }
-
-    public void resumeGame() throws FileNotFoundException {
         btnreturn=new Button();
+        Stage stage = new Stage();
         Image home = new Image(new FileInputStream("assets/resume_home.png"));
         ImageView imageViewHome = new ImageView(home);
         imageViewHome.setFitWidth(50);
@@ -137,14 +138,76 @@ public class MainMenu extends Application implements Serializable
         btnreturn.setLayoutX(10);
         Image choose = new Image(new FileInputStream("assets/CHOOSE_GAME.png"));
         ImageView imageViewChoose = new ImageView(choose);
-        //imageViewChoose.setFitHeight(80);
-        //imageViewChoose.setFitWidth(400);
+        ImageView imageViewGame1 = new ImageView(new Image(new FileInputStream("assets/game1.png")));
+        Button game1 = new Button();
+        game1.setGraphic(imageViewGame1);
+        game1.setBackground(Background.EMPTY);
+        game1.setLayoutX(-10);
+        game1.setLayoutY(70);
+        ImageView imageViewGame2 = new ImageView(new Image(new FileInputStream("assets/game2.png")));
+        Button game2 = new Button();
+        game2.setGraphic(imageViewGame2);
+        game2.setBackground(Background.EMPTY);
+        game2.setLayoutX(-10);
+        game2.setLayoutY(125);
+        ImageView imageViewGame3 = new ImageView(new Image(new FileInputStream("assets/game3.png")));
+        Button game3 = new Button();
+        game3.setGraphic(imageViewGame3);
+        game3.setBackground(Background.EMPTY);
+        game3.setLayoutX(-10);
+        game3.setLayoutY(180);
+        ImageView imageViewGame4 = new ImageView(new Image(new FileInputStream("assets/game4.png")));
+        Button game4 = new Button();
+        game4.setGraphic(imageViewGame4);
+        game4.setBackground(Background.EMPTY);
+        game4.setLayoutX(-10);
+        game4.setLayoutY(235);
+        ImageView imageViewGame5 = new ImageView(new Image(new FileInputStream("assets/game5.png")));
+        imageViewGame5.setLayoutY(270);
+        Button game5 = new Button();
+        game5.setGraphic(imageViewGame5);
+        game5.setBackground(Background.EMPTY);
+        game5.setLayoutX(-10);
+        game5.setLayoutY(290);
+        game1.setOnAction(e->{
+            stage.close();
+            Game.setScore(12);
+            newGame(window);
+        });
+        game2.setOnAction(e->{
+            stage.close();
+            Game.setScore(9);
+            newGame(window);
+        });
+        game3.setOnAction(e->{
+            stage.close();
+            Game.setScore(10);
+            newGame(window);
+        });
+        game4.setOnAction(e->{
+            stage.close();
+            Game.setScore(15);
+            newGame(window);
+        });
+        game5.setOnAction(e->{
+            stage.close();
+            Game.setScore(5);
+            newGame(window);
+        });
         Group layout2=new Group();
         layout2.getChildren().addAll(imageViewChoose, btnreturn);
+        layout2.getChildren().addAll(game1, game2, game3, game4, game5);
         scene2=new Scene(layout2,250,250);
         scene2.setFill(Color.rgb(40,40,40));
-        window.setScene(scene2);
-        btnreturn.setOnAction(e->window.setScene(scene1));
+        stage.setScene(scene2);
+        stage.setHeight(700);
+        stage.setWidth(400);
+        stage.show();
+        btnreturn.setOnAction(e->
+        {
+            stage.close();
+            window.show();
+        });
     }
 
     public static void main(String[] args) {
