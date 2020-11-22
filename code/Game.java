@@ -103,8 +103,8 @@ public class Game
         btnPause.setBackground(Background.EMPTY);
         btnPause.setLayoutX(220);
         btnPause.setLayoutY(10);
-
-        setScore(17); //oops
+        if(getScore()==0)
+            setScore(17); //oops
         Text score_value = new Text(10.0, 30.0, getScore()+""); //oops
         Font font = Font.font("Verdana", FontWeight.BOLD,  35);
         score_value.setFont(font);
@@ -181,7 +181,7 @@ public class Game
         scene.setOnKeyPressed(e->
         {
             if(e.getCode()== KeyCode.W)
-                circle.setCenterY(circle.getCenterY()-10);
+                ball.jump();
             if(circle.intersects(innerCircle.getLayoutBounds()))
             {
                 try {
