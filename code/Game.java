@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.ObjectStreamClass;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Game
 {
@@ -206,14 +207,15 @@ public class Game
         rotate2.play();
         final double[] obstacle_position = {-400};
         final int[] i = {0};
-        timer = new AnimationTimer() 
+        final double[] speed = {2};
+        timer = new AnimationTimer()
         {
             @Override
             public void handle(long l)
             {
                 if(ball.getCircle().getCenterY()<550)
                 {
-                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + 1.2);
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
                 }
                 if(ball.getCircle().getCenterY()<300)
                 {
@@ -243,6 +245,36 @@ public class Game
                                 c.getColorSwitcher().setVisible(false);
                             i[0]++;
                         }
+                    }
+                }
+                if(colorswitcher_imageView.isVisible() &&
+                        ball.getCircle().intersects(colorswitcher_imageView.getBoundsInParent()))
+                {
+                    colorswitcher_imageView.setVisible(false);
+                    Random rand = new Random();
+                    int color = rand.nextInt(4);
+                    switch (color)
+                    {
+                        case 0: if(ball.getCircle().getFill().equals(Color.rgb(250, 225, 0))) //yellow
+                                    ball.getCircle().setFill(Color.rgb(144,13,255));
+                                else
+                                    ball.getCircle().setFill(Color.rgb(250,225,0));
+                                break;
+                        case 1: if(ball.getCircle().getFill().equals(Color.rgb(50, 219,240))) //cyan
+                                    ball.getCircle().setFill(Color.rgb(250,225,0));
+                                else
+                                    ball.getCircle().setFill(Color.rgb(50,219,240));
+                                break;
+                        case 2: if(ball.getCircle().getFill().equals(Color.rgb(144, 13,225))) //purple
+                                    ball.getCircle().setFill(Color.rgb(225,1,129));
+                                else
+                                    ball.getCircle().setFill(Color.rgb(144,13,225));
+                                break;
+                        case 3: if(ball.getCircle().getFill().equals(Color.rgb(225, 1,129))) //pink
+                                    ball.getCircle().setFill(Color.rgb(50,219,240));
+                                else
+                                    ball.getCircle().setFill(Color.rgb(225,1,129));
+                                break;
                     }
                 }
             }
