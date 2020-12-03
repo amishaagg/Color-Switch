@@ -175,7 +175,7 @@ public class Game
 
         ImageView colorswitcher_imageView = new ImageView(new Image(new FileInputStream("assets/ColorSwitcher.png")));
         getColorSwitchers().add(new ColorSwitcher(colorswitcher_imageView)); //oops
-        colorswitcher_imageView.setX(120);
+        colorswitcher_imageView.setX(125);
         colorswitcher_imageView.setY(110);
 
         Shape shape1=Shape.subtract(arc,innerCircle);
@@ -204,8 +204,10 @@ public class Game
         rotate2.setDuration(Duration.millis(5000));
         rotate2.setNode(obstaclegroup2);
         rotate2.play();
-
-        timer = new AnimationTimer() {
+        final double[] obstacle_position = {-400};
+        final int[] i = {0};
+        timer = new AnimationTimer() 
+        {
             @Override
             public void handle(long l)
             {
@@ -221,23 +223,30 @@ public class Game
                         {
                             obstacle.getObstacleGroup().setLayoutY(obstacle.getObstacleGroup().getLayoutY() + 7);
                         }
-                        if(obstaclegroup.getBoundsInParent().getMinY()>=650)
-                            obstaclegroup.setLayoutY(-600);
-                        if(obstaclegroup2.getBoundsInParent().getMinY()>=650)
-                            obstaclegroup2.setLayoutY(-590);
+                        if(obstacle.getObstacleGroup().getBoundsInParent().getMinY()>=650) {
+                            obstacle.getObstacleGroup().setLayoutY(obstacle_position[0]);
+                            obstacle_position[0] -= 1;
+                        }
                     }
-//                    for(ColorSwitcher c: getColorSwitchers())
-//                    {
-//                        if(jumping==true)
-//                            c.getColorSwitcher().setLayoutY(c.getColorSwitcher().getLayoutY()+7);
-//                        if(c.getColorSwitcher().getBoundsInParent().getMinY()>=650)
-//                            c.getColorSwitcher().setLayoutY(-400);
-//                    }
+                    for(ColorSwitcher c: getColorSwitchers())
+                    {
+                        if(jumping==true)
+                            c.getColorSwitcher().setLayoutY(c.getColorSwitcher().getLayoutY()+7);
+                        if(c.getColorSwitcher().getBoundsInParent().getMinY()>=650)
+                        {
+                            c.getColorSwitcher().setVisible(true);
+                            if(i[0]%2==0)
+                                c.getColorSwitcher().setLayoutY(obstaclegroup2.getLayoutY());
+                            else
+                                c.getColorSwitcher().setLayoutY(obstaclegroup2.getLayoutY()-50);
+                            if(i[0]%3==0)
+                                c.getColorSwitcher().setVisible(false);
+                            i[0]++;
+                        }
+                    }
                 }
             }
         };
-//        System.out.println(obstaclegroup.getBoundsInParent().getMaxY()+obstaclegroup.getBoundsInParent().getMinY());
-//        System.out.println(obstaclegroup2.getBoundsInParent().getMaxY()+obstaclegroup2.getBoundsInParent().getMinY());
         timer.start();
         if(ball.getCircle().getCenterY()<550)
             timer.stop();
@@ -250,8 +259,8 @@ public class Game
             }
         });
         scene.setOnKeyReleased(e->jumping=false);
-        //layout.getChildren().addAll(big_star,btnPause,score_value,colorswitcher_imageView);
-        layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle);
+        //layout.getChildren().addAll(big_star,btnPause,score_value);
+        layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
         obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
         btnPause.setOnAction(e-> {
             try {
@@ -322,7 +331,8 @@ public class Game
         window.showAndWait();
     }
 
-    public void gameOver(Stage primaryStage, Stage GameStage) throws FileNotFoundException {
+    public void gameOver(Stage primaryStage, Stage GameStage) throws FileNotFoundException
+    {
         Group group = new Group();
         Scene scene = new Scene(group);
         Stage window = new Stage();
