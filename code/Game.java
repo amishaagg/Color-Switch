@@ -1,7 +1,10 @@
 import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,6 +24,7 @@ import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.ObjectStreamClass;
 import java.util.ArrayList;
 
 public class Game
@@ -31,6 +35,8 @@ public class Game
     private static ArrayList<ColorSwitcher> colorSwitchers = new ArrayList<>();
     private static Ball ball;
     private static int score;
+    AnimationTimer timer;
+    boolean jumping;
 
     public static ArrayList<GameElement> getGameElements() {
         return gameElements;
@@ -199,23 +205,57 @@ public class Game
         rotate2.setNode(obstaclegroup2);
         rotate2.play();
 
+        timer = new AnimationTimer() {
+            @Override
+            public void handle(long l)
+            {
+                if(ball.getCircle().getCenterY()<550)
+                {
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + 1.2);
+                }
+                if(ball.getCircle().getCenterY()<300)
+                {
+                    for(Obstacle obstacle: getObstacles())
+                    {
+                        if(jumping==true)
+                        {
+                            obstacle.getObstacleGroup().setLayoutY(obstacle.getObstacleGroup().getLayoutY() + 7);
+                        }
+                        if(obstaclegroup.getBoundsInParent().getMinY()>=650)
+                            obstaclegroup.setLayoutY(-600);
+                        if(obstaclegroup2.getBoundsInParent().getMinY()>=650)
+                            obstaclegroup2.setLayoutY(-590);
+                    }
+//                    for(ColorSwitcher c: getColorSwitchers())
+//                    {
+//                        if(jumping==true)
+//                            c.getColorSwitcher().setLayoutY(c.getColorSwitcher().getLayoutY()+7);
+//                        if(c.getColorSwitcher().getBoundsInParent().getMinY()>=650)
+//                            c.getColorSwitcher().setLayoutY(-400);
+//                    }
+                }
+            }
+        };
+//        System.out.println(obstaclegroup.getBoundsInParent().getMaxY()+obstaclegroup.getBoundsInParent().getMinY());
+//        System.out.println(obstaclegroup2.getBoundsInParent().getMaxY()+obstaclegroup2.getBoundsInParent().getMinY());
+        timer.start();
+        if(ball.getCircle().getCenterY()<550)
+            timer.stop();
         scene.setOnKeyPressed(e->
         {
             if(e.getCode()== KeyCode.W)
-                ball.jump();
-            if(circle.intersects(innerCircle.getLayoutBounds()))
             {
-                try {
-                    gameOver(primaryStage, window);
-                } catch (FileNotFoundException fileNotFoundException) {
-                    fileNotFoundException.printStackTrace();
-                }
+                ball.jump();
+                jumping = true;
             }
         });
-        layout.getChildren().add(big_star);
-        layout.getChildren().addAll(btnPause,starimageView,score_value,circle,colorswitcher_imageView,obstaclegroup,obstaclegroup2);
+        scene.setOnKeyReleased(e->jumping=false);
+        //layout.getChildren().addAll(big_star,btnPause,score_value,colorswitcher_imageView);
+        layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle);
+        obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
         btnPause.setOnAction(e-> {
             try {
+                timer.stop();
                 pause(window, primaryStage);
             } catch (FileNotFoundException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
@@ -264,10 +304,13 @@ public class Game
             fadeTransition.setToValue(0);
             fadeTransition.play();
         });
-        saved_text.setOnMouseReleased(e -> saved_text.setVisible(false));
-        saved_text.setVisible(false);
-        resume.setOnAction(e->window.close());
+        resume.setOnAction(e->
+        {
+            timer.start();
+            window.close();
+        });
         exit.setOnAction(e->exitToMainMenu(primaryStage, GameStage, window));
+        window.setOnCloseRequest(e->timer.start());
         resume.setLayoutX(65);
         resume.setLayoutY(150);
         save.setLayoutX(65);
@@ -322,6 +365,7 @@ public class Game
         });
         continue_using_stars.setOnAction(e->
         {
+            timer.start();
             window.close();
             ball.getCircle().setCenterY(ball.getCircle().getCenterY()+30);
             GameStage.show();
