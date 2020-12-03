@@ -7,7 +7,7 @@ public class Ball extends GameElement
     private Circle circle;
     public void jump()
     {
-        this.circle.setCenterY(circle.getCenterY()-10);
+        this.circle.setCenterY(circle.getCenterY()-35);
     };
 
     public Ball(Circle circle, String color)
