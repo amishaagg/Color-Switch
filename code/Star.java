@@ -25,4 +25,10 @@ public class Star extends GameElement
     public int getValue() {
         return value;
     }
+
+    public void vanish()
+    {
+        this.star.setVisible(false);
+        Game.setScore(Game.getScore()+1);
+    }
 }
