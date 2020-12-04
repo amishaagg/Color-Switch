@@ -116,6 +116,7 @@ public class Game
         score_value.setFill(Color.WHITE);
 
         ImageView starimageView = new ImageView(new Image(new FileInputStream("assets/star.png")));
+        starimageView.setId("star");
         getStars().add(new Star(starimageView)); //oops
         starimageView.setX(130.0f);
         starimageView.setY(275.0f);
@@ -129,13 +130,17 @@ public class Game
 
         Rectangle rectangle=new Rectangle(75,220,150,20);
         rectangle.setFill(Color.rgb(250,225,0));
+        rectangle.setId("yellow");
         Rectangle rectangle2=new Rectangle(205,220,20,150);
         rectangle2.setFill(Color.rgb(144,13,255));
+        rectangle2.setId("purple");
         Rectangle rectangle3=new Rectangle(75,350,150,20);
         rectangle3.setFill(Color.rgb(255,1,129));
+        rectangle3.setId("pink");
         Rectangle rectangle4=new Rectangle(75,220,20,150);
         rectangle4.setFill(Color.rgb(50,219,240));
-        Group obstaclegroup2=new Group(rectangle,rectangle2,rectangle3,rectangle4,starimageView);
+        rectangle4.setId("cyan");
+        Group obstaclegroup2=new Group(rectangle,rectangle2,rectangle3,rectangle4);
         getObstacles().add(new Obstacle(obstaclegroup2)); //oops
 
         Arc arc = new Arc(150.0,300.0,100.0,100.0,0.0,90.0);
@@ -171,14 +176,21 @@ public class Game
         Arc innerCircle = new Arc(150.0f,300.0f,80.0f,80.0f,0.0f,360.0f);
         innerCircle.setType(ArcType.ROUND);
 
-        Circle circle = new Circle(150, 550, 17, Color.rgb(250,225,0));
-        ball = new Ball(circle, "Yellow"); //oops
+        Circle circle = new Circle(150, 550, 10, Color.rgb(250,225,0));
+        ball = new Ball(circle, "yellow"); //oops
 
         ImageView colorswitcher_imageView = new ImageView(new Image(new FileInputStream("assets/ColorSwitcher.png")));
         getColorSwitchers().add(new ColorSwitcher(colorswitcher_imageView)); //oops
         colorswitcher_imageView.setX(125);
         colorswitcher_imageView.setY(110);
-        
+
+        ImageView starimageView2 = new ImageView(new Image(new FileInputStream("assets/star.png")));
+        starimageView2.setId("star");
+        getStars().add(new Star(starimageView)); //oops
+        starimageView2.setX(130.0f);
+        starimageView2.setY(275.0f);
+        starimageView2.setFitHeight(40);
+        starimageView2.setFitWidth(40);
         Shape shape1=Shape.subtract(arc,innerCircle);
         shape1.setFill(Color.rgb(250,225,0));
         shape1.setId("yellow");
@@ -187,7 +199,7 @@ public class Game
         shape2.setId("purple");
         Shape shape3=Shape.subtract(arc3,innerCircle);
         shape3.setFill(Color.rgb(255, 1, 129));
-        shape3.setId("pink")
+        shape3.setId("pink");
         Shape shape4=Shape.subtract(arc4,innerCircle);
         shape4.setFill(Color.rgb(50, 219, 240));
         shape4.setId("cyan");
@@ -217,6 +229,34 @@ public class Game
             @Override
             public void handle(long l)
             {
+                double lower=ball.getCircle().getCenterY()+ball.getCircle().getRadius();
+                double upper=ball.getCircle().getCenterY()-ball.getCircle().getRadius();
+
+                    for(Node shapey:obstaclegroup.getChildren()){
+                        if(shapey.getId().equals("star")) {//ball.getCircle().intersects(colorswitcher_imageView.getBoundsInParent()))
+                            //Shape intersect = Shape.intersect((ImageView) shapey,ball.getCircle());
+                            //if(shapey.isVisible() && intersect.getBoundsInParent().getWidth()>0)
+                            if(shapey.isVisible() && ball.getCircle().intersects(shapey.getBoundsInParent()))
+                                {
+                                System.out.println("fvfvf");
+                                shapey.setVisible(false);
+                            }
+
+                        }
+                        else if(!ball.getColor().equals(shapey.getId())){
+                            Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
+                            if(intersect.getBoundsInParent().getWidth()>0){
+                                try {
+                                    timer.stop();
+                                    gameOver(window,primaryStage);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+
+
                 if(ball.getCircle().getCenterY()<550)
                 {
                     ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
@@ -259,26 +299,50 @@ public class Game
                     int color = rand.nextInt(4);
                     switch (color)
                     {
-                        case 0: if(ball.getCircle().getFill().equals(Color.rgb(250, 225, 0))) //yellow
-                                    ball.getCircle().setFill(Color.rgb(144,13,255));
-                                else
-                                    ball.getCircle().setFill(Color.rgb(250,225,0));
-                                break;
-                        case 1: if(ball.getCircle().getFill().equals(Color.rgb(50, 219,240))) //cyan
-                                    ball.getCircle().setFill(Color.rgb(250,225,0));
-                                else
-                                    ball.getCircle().setFill(Color.rgb(50,219,240));
-                                break;
-                        case 2: if(ball.getCircle().getFill().equals(Color.rgb(144, 13,225))) //purple
-                                    ball.getCircle().setFill(Color.rgb(225,1,129));
-                                else
-                                    ball.getCircle().setFill(Color.rgb(144,13,225));
-                                break;
-                        case 3: if(ball.getCircle().getFill().equals(Color.rgb(225, 1,129))) //pink
-                                    ball.getCircle().setFill(Color.rgb(50,219,240));
-                                else
-                                    ball.getCircle().setFill(Color.rgb(225,1,129));
-                                break;
+                        case 0: if(ball.getColor().equals("yellow")) //yellow
+                        {
+                            ball.getCircle().setFill(Color.rgb(144,13,255));
+                            ball.setColor("purple");
+                        }
+
+                        else{
+                            ball.getCircle().setFill(Color.rgb(250,225,0));
+                            ball.setColor("yellow");
+                        }
+                        break;
+
+                        case 1: if(ball.getColor().equals("cyan")) //cyan
+                        {
+                            ball.getCircle().setFill(Color.rgb(250,225,0));
+                            ball.setColor("yellow");
+                        }
+                        else{
+                            ball.getCircle().setFill(Color.rgb(50,219,240));
+                            ball.setColor("cyan");
+                        }
+                        break;
+
+                        case 2: if(ball.getColor().equals("purple")) //purple
+                        {
+                            ball.getCircle().setFill(Color.rgb(255,1,129));
+                            ball.setColor("pink");
+                        }
+                        else{
+                            ball.getCircle().setFill(Color.rgb(144,13,225));
+                            ball.setColor("purple");
+                        }
+                        break;
+
+                        case 3: if(ball.getColor().equals("pink")) //pink
+                        {
+                            ball.getCircle().setFill(Color.rgb(50,219,240));
+                            ball.setColor("cyan");
+                        }
+                        else{
+                            ball.getCircle().setFill(Color.rgb(255,1,129));
+                            ball.setColor("pink");
+                        }
+                        break;
                     }
                 }
             }
@@ -296,7 +360,7 @@ public class Game
         });
         scene.setOnKeyReleased(e->jumping=false);
         //layout.getChildren().addAll(big_star,btnPause,score_value);
-        layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
+        layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView,starimageView,starimageView2);
         obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
         btnPause.setOnAction(e-> {
             try {
