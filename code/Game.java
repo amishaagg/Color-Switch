@@ -232,12 +232,13 @@ public class Game
                 double lower=ball.getCircle().getCenterY()+ball.getCircle().getRadius();
                 double upper=ball.getCircle().getCenterY()-ball.getCircle().getRadius();
 
-                    for(Node shapey:obstaclegroup.getChildren()){
+                for(Obstacle obstacle:obstacles){
+                    for(Node shapey:obstacle.getObstacleGroup().getChildren()){
                         if(shapey.getId().equals("star")) {//ball.getCircle().intersects(colorswitcher_imageView.getBoundsInParent()))
                             //Shape intersect = Shape.intersect((ImageView) shapey,ball.getCircle());
                             //if(shapey.isVisible() && intersect.getBoundsInParent().getWidth()>0)
                             if(shapey.isVisible() && ball.getCircle().intersects(shapey.getBoundsInParent()))
-                                {
+                            {
                                 System.out.println("fvfvf");
                                 shapey.setVisible(false);
                             }
@@ -255,6 +256,7 @@ public class Game
                             }
                         }
                     }
+                }
 
 
                 if(ball.getCircle().getCenterY()<550)
