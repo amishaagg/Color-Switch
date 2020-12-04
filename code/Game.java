@@ -1,4 +1,7 @@
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
+import javafx.animation.RotateTransition;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -9,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
@@ -104,8 +108,7 @@ public class Game
         btnPause.setBackground(Background.EMPTY);
         btnPause.setLayoutX(220);
         btnPause.setLayoutY(10);
-        if(getScore()==0)
-            setScore(17); //oops
+        setScore(0); //oops
         Text score_value = new Text(10.0, 30.0, getScore()+""); //oops
         Font font = Font.font("Verdana", FontWeight.BOLD,  35);
         score_value.setFont(font);
@@ -115,15 +118,19 @@ public class Game
         ImageView starimageView = new ImageView(new Image(new FileInputStream("assets/star.png")));
         starimageView.setId("star");
         getStars().add(new Star(starimageView)); //oops
-        starimageView.setX(10.0f);
+        starimageView.setX(130.0f);
         starimageView.setY(275.0f);
         starimageView.setFitHeight(40);
         starimageView.setFitWidth(40);
+        starimageView.setVisible(false);
 
-        ImageView big_star = new ImageView(new Image(new FileInputStream("assets/big_star.png")));
-        getStars().add(new Star(big_star)); //oops
-        big_star.setLayoutX(120);
-        big_star.setLayoutY(50);
+        ImageView starimageView2 = new ImageView(new Image(new FileInputStream("assets/star.png")));
+        starimageView2.setId("star");
+        getStars().add(new Star(starimageView2)); //oops
+        starimageView2.setX(130.0f);
+        starimageView2.setY(275.0f);
+        starimageView2.setFitHeight(40);
+        starimageView2.setFitWidth(40);
 
         Rectangle rectangle=new Rectangle(75,220,150,20);
         rectangle.setFill(Color.rgb(250,225,0));
@@ -139,39 +146,6 @@ public class Game
         rectangle4.setId("cyan");
         Group obstaclegroup2=new Group(rectangle,rectangle2,rectangle3,rectangle4);
         getObstacles().add(new Obstacle(obstaclegroup2)); //oops
-
-        Rectangle obstacle3=new Rectangle(75,75,150,20);
-        obstacle3.setFill(Color.rgb(50,219,240));
-        PauseTransition pause = new PauseTransition(Duration.seconds(2));
-        pause.setOnFinished(event ->{ obstacle3.setFill(Color.rgb(250,225,0)); });
-        PauseTransition pause2 = new PauseTransition(Duration.seconds(2));
-        pause2.setOnFinished(event ->{obstacle3.setFill(Color.rgb(144,13,255)); });
-        PauseTransition pause3 = new PauseTransition(Duration.seconds(2));
-        pause3.setOnFinished(event ->{obstacle3.setFill(Color.rgb(255,1,129));});
-        PauseTransition pause4 = new PauseTransition(Duration.seconds(2));
-        pause4.setOnFinished(event ->{ obstacle3.setFill(Color.rgb(50,219,240));});
-        SequentialTransition seq=new SequentialTransition(pause,pause2,pause3,pause4);
-
-        Rectangle obstacle3_2=new Rectangle(75,175,150,20);
-        obstacle3_2.setFill(Color.rgb(50,219,240));
-        PauseTransition pause_2 = new PauseTransition(Duration.seconds(2));
-        pause_2.setOnFinished(event ->{ obstacle3_2.setFill(Color.rgb(250,225,0)); });
-        PauseTransition pause2_2 = new PauseTransition(Duration.seconds(2));
-        pause2_2.setOnFinished(event ->{ obstacle3_2.setFill(Color.rgb(144,13,255)); });
-        PauseTransition pause3_2 = new PauseTransition(Duration.seconds(2));
-        pause3_2.setOnFinished(event ->{ obstacle3_2.setFill(Color.rgb(255,1,129)); });
-        PauseTransition pause4_2 = new PauseTransition(Duration.seconds(2));
-        pause4_2.setOnFinished(event ->{ obstacle3_2.setFill(Color.rgb(50,219,240)); });
-//        FadeTransition fadeTransition_2 = new FadeTransition(Duration.millis(1000));
-//        fadeTransition_2.setNode(obstacle3_2);
-//        fadeTransition_2.setFromValue(10);
-//        fadeTransition_2.setToValue(0);
-        Group obstaclegroup3=new Group(obstacle3,obstacle3_2);
-        SequentialTransition seq_2=new SequentialTransition(pause_2,pause2_2,pause3_2,pause4_2);
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000));
-        fadeTransition.setNode(obstaclegroup3);
-        fadeTransition.setFromValue(10);
-        fadeTransition.setToValue(0);
 
         Arc arc = new Arc(150.0,300.0,100.0,100.0,0.0,90.0);
         arc.setType(ArcType.ROUND);
@@ -214,13 +188,6 @@ public class Game
         colorswitcher_imageView.setX(125);
         colorswitcher_imageView.setY(110);
 
-        ImageView starimageView2 = new ImageView(new Image(new FileInputStream("assets/star.png")));
-        starimageView2.setId("star");
-        getStars().add(new Star(starimageView)); //oops
-        starimageView2.setX(130.0f);
-        starimageView2.setY(275.0f);
-        starimageView2.setFitHeight(40);
-        starimageView2.setFitWidth(40);
         Shape shape1=Shape.subtract(arc,innerCircle);
         shape1.setFill(Color.rgb(250,225,0));
         shape1.setId("yellow");
@@ -253,40 +220,38 @@ public class Game
         rotate2.play();
         final double[] obstacle_position = {-400};
         final int[] i = {0};
+        final int[] j = {0};
         final double[] speed = {2};
         timer = new AnimationTimer()
         {
             @Override
             public void handle(long l)
             {
-                seq.play();
-                //fadeTransition_2.play();
-                seq_2.play();
-                fadeTransition.play();
                 double lower=ball.getCircle().getCenterY()+ball.getCircle().getRadius();
                 double upper=ball.getCircle().getCenterY()-ball.getCircle().getRadius();
 
-                for(Obstacle obstacle:obstacles){
-                    for(Node shapey:obstacle.getObstacleGroup().getChildren()){
-                        if(shapey.getId().equals("star")) {//ball.getCircle().intersects(colorswitcher_imageView.getBoundsInParent()))
-                            //Shape intersect = Shape.intersect((ImageView) shapey,ball.getCircle());
-                            //if(shapey.isVisible() && intersect.getBoundsInParent().getWidth()>0)
-                            if(shapey.isVisible() && ball.getCircle().intersects(shapey.getBoundsInParent()))
-                            {
-                                System.out.println("fvfvf");
-                                shapey.setVisible(false);
-                            }
-
-                        }
-                        else if(!ball.getColor().equals(shapey.getId())){
-                            Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
-                            if(intersect.getBoundsInParent().getWidth()>0){
-                                try {
-                                    timer.stop();
-                                    gameOver(window,primaryStage);
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                }
+                for(Node shapey:obstaclegroup.getChildren())
+                {
+//                    if(shapey.getId().equals("star") && shapey.getBoundsInParent().getMinY()>=650)
+//                    {
+//                        shapey.setVisible(true);
+////                        if(shapey.isVisible() && ball.getCircle().intersects(shapey.getBoundsInLocal()))
+////                        {
+////                            System.out.println("hello");
+////                            //shapey.setVisible(false);
+////                        }
+//
+//                    }
+                    if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
+                    {
+                        Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
+                        if(intersect.getBoundsInParent().getWidth()>0)
+                        {
+                            try {
+                                timer.stop();
+                                gameOver(primaryStage, window);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
                             }
                         }
                     }
@@ -299,9 +264,28 @@ public class Game
                 }
                 if(ball.getCircle().getCenterY()<300)
                 {
+                    for(Star s: getStars())
+                    {
+                        if(jumping)
+                            s.getStar().setLayoutY(s.getStar().getLayoutY()+7);
+                    }
+
+                    if(starimageView.getBoundsInParent().getMinY()>=650)
+                    {
+                        if(obstacle_position[0]<=-401)
+                            starimageView.setVisible(true);
+                        starimageView.setLayoutY(obstaclegroup.getLayoutY());
+                    }
+
+                    if(starimageView2.getBoundsInParent().getMinY()>=650)
+                    {
+                        starimageView2.setVisible(true);
+                        starimageView2.setLayoutY(obstaclegroup2.getLayoutY());
+                    }
+
                     for(Obstacle obstacle: getObstacles())
                     {
-                        if(jumping==true)
+                        if(jumping)
                         {
                             obstacle.getObstacleGroup().setLayoutY(obstacle.getObstacleGroup().getLayoutY() + 7);
                         }
@@ -310,9 +294,10 @@ public class Game
                             obstacle_position[0] -= 1;
                         }
                     }
+
                     for(ColorSwitcher c: getColorSwitchers())
                     {
-                        if(jumping==true)
+                        if(jumping)
                             c.getColorSwitcher().setLayoutY(c.getColorSwitcher().getLayoutY()+7);
                         if(c.getColorSwitcher().getBoundsInParent().getMinY()>=650)
                         {
@@ -327,59 +312,21 @@ public class Game
                         }
                     }
                 }
+
+                for(Star s: getStars())
+                {
+                    if(s.getStar().isVisible() && ball.getCircle().intersects(s.getStar().getBoundsInParent()))
+                    {
+                        s.vanish();
+                        score_value.setText(getScore()+"");
+                    }
+                }
+
                 if(colorswitcher_imageView.isVisible() &&
                         ball.getCircle().intersects(colorswitcher_imageView.getBoundsInParent()))
                 {
                     colorswitcher_imageView.setVisible(false);
-                    Random rand = new Random();
-                    int color = rand.nextInt(4);
-                    switch (color)
-                    {
-                        case 0: if(ball.getColor().equals("yellow")) //yellow
-                        {
-                            ball.getCircle().setFill(Color.rgb(144,13,255));
-                            ball.setColor("purple");
-                        }
-
-                        else{
-                            ball.getCircle().setFill(Color.rgb(250,225,0));
-                            ball.setColor("yellow");
-                        }
-                        break;
-
-                        case 1: if(ball.getColor().equals("cyan")) //cyan
-                        {
-                            ball.getCircle().setFill(Color.rgb(250,225,0));
-                            ball.setColor("yellow");
-                        }
-                        else{
-                            ball.getCircle().setFill(Color.rgb(50,219,240));
-                            ball.setColor("cyan");
-                        }
-                        break;
-
-                        case 2: if(ball.getColor().equals("purple")) //purple
-                        {
-                            ball.getCircle().setFill(Color.rgb(255,1,129));
-                            ball.setColor("pink");
-                        }
-                        else{
-                            ball.getCircle().setFill(Color.rgb(144,13,225));
-                            ball.setColor("purple");
-                        }
-                        break;
-
-                        case 3: if(ball.getColor().equals("pink")) //pink
-                        {
-                            ball.getCircle().setFill(Color.rgb(50,219,240));
-                            ball.setColor("cyan");
-                        }
-                        else{
-                            ball.getCircle().setFill(Color.rgb(255,1,129));
-                            ball.setColor("pink");
-                        }
-                        break;
-                    }
+                    ColorSwitcher.changeColor(ball);
                 }
             }
         };
@@ -388,7 +335,7 @@ public class Game
             timer.stop();
         scene.setOnKeyPressed(e->
         {
-            if(e.getCode()== KeyCode.W)
+            if(e.getCode()== KeyCode.Q)
             {
                 ball.jump();
                 jumping = true;
@@ -396,8 +343,8 @@ public class Game
         });
         scene.setOnKeyReleased(e->jumping=false);
         //layout.getChildren().addAll(big_star,btnPause,score_value);
-        layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView,
-                obstaclegroup3,starimageView,starimageView2);
+        layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
+        layout.getChildren().addAll(score_value, starimageView, starimageView2);
         obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
         btnPause.setOnAction(e-> {
             try {
@@ -498,6 +445,7 @@ public class Game
         restart.setOnAction(e->
         {
             window.close();
+            GameStage.close();
             try {
                 new Game(primaryStage);
             } catch (FileNotFoundException fileNotFoundException) {
@@ -514,7 +462,7 @@ public class Game
         {
             timer.start();
             window.close();
-            ball.getCircle().setCenterY(ball.getCircle().getCenterY()+30);
+            ball.getCircle().setCenterY(ball.getCircle().getCenterY()+50);
             GameStage.show();
         });
         group.getChildren().addAll(restart, home, continue_using_stars, scoreImageView, HighScoreImageView);
