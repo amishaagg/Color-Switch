@@ -1,7 +1,4 @@
-import javafx.animation.Animation;
-import javafx.animation.AnimationTimer;
-import javafx.animation.FadeTransition;
-import javafx.animation.RotateTransition;
+import javafx.animation.*;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -118,7 +115,7 @@ public class Game
         ImageView starimageView = new ImageView(new Image(new FileInputStream("assets/star.png")));
         starimageView.setId("star");
         getStars().add(new Star(starimageView)); //oops
-        starimageView.setX(130.0f);
+        starimageView.setX(10.0f);
         starimageView.setY(275.0f);
         starimageView.setFitHeight(40);
         starimageView.setFitWidth(40);
@@ -142,6 +139,39 @@ public class Game
         rectangle4.setId("cyan");
         Group obstaclegroup2=new Group(rectangle,rectangle2,rectangle3,rectangle4);
         getObstacles().add(new Obstacle(obstaclegroup2)); //oops
+
+        Rectangle obstacle3=new Rectangle(75,75,150,20);
+        obstacle3.setFill(Color.rgb(50,219,240));
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
+        pause.setOnFinished(event ->{ obstacle3.setFill(Color.rgb(250,225,0)); });
+        PauseTransition pause2 = new PauseTransition(Duration.seconds(2));
+        pause2.setOnFinished(event ->{obstacle3.setFill(Color.rgb(144,13,255)); });
+        PauseTransition pause3 = new PauseTransition(Duration.seconds(2));
+        pause3.setOnFinished(event ->{obstacle3.setFill(Color.rgb(255,1,129));});
+        PauseTransition pause4 = new PauseTransition(Duration.seconds(2));
+        pause4.setOnFinished(event ->{ obstacle3.setFill(Color.rgb(50,219,240));});
+        SequentialTransition seq=new SequentialTransition(pause,pause2,pause3,pause4);
+
+        Rectangle obstacle3_2=new Rectangle(75,175,150,20);
+        obstacle3_2.setFill(Color.rgb(50,219,240));
+        PauseTransition pause_2 = new PauseTransition(Duration.seconds(2));
+        pause_2.setOnFinished(event ->{ obstacle3_2.setFill(Color.rgb(250,225,0)); });
+        PauseTransition pause2_2 = new PauseTransition(Duration.seconds(2));
+        pause2_2.setOnFinished(event ->{ obstacle3_2.setFill(Color.rgb(144,13,255)); });
+        PauseTransition pause3_2 = new PauseTransition(Duration.seconds(2));
+        pause3_2.setOnFinished(event ->{ obstacle3_2.setFill(Color.rgb(255,1,129)); });
+        PauseTransition pause4_2 = new PauseTransition(Duration.seconds(2));
+        pause4_2.setOnFinished(event ->{ obstacle3_2.setFill(Color.rgb(50,219,240)); });
+//        FadeTransition fadeTransition_2 = new FadeTransition(Duration.millis(1000));
+//        fadeTransition_2.setNode(obstacle3_2);
+//        fadeTransition_2.setFromValue(10);
+//        fadeTransition_2.setToValue(0);
+        Group obstaclegroup3=new Group(obstacle3,obstacle3_2);
+        SequentialTransition seq_2=new SequentialTransition(pause_2,pause2_2,pause3_2,pause4_2);
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000));
+        fadeTransition.setNode(obstaclegroup3);
+        fadeTransition.setFromValue(10);
+        fadeTransition.setToValue(0);
 
         Arc arc = new Arc(150.0,300.0,100.0,100.0,0.0,90.0);
         arc.setType(ArcType.ROUND);
@@ -229,6 +259,10 @@ public class Game
             @Override
             public void handle(long l)
             {
+                seq.play();
+                //fadeTransition_2.play();
+                seq_2.play();
+                fadeTransition.play();
                 double lower=ball.getCircle().getCenterY()+ball.getCircle().getRadius();
                 double upper=ball.getCircle().getCenterY()-ball.getCircle().getRadius();
 
@@ -362,7 +396,8 @@ public class Game
         });
         scene.setOnKeyReleased(e->jumping=false);
         //layout.getChildren().addAll(big_star,btnPause,score_value);
-        layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView,starimageView,starimageView2);
+        layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView,
+                obstaclegroup3,starimageView,starimageView2);
         obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
         btnPause.setOnAction(e-> {
             try {
