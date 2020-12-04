@@ -178,15 +178,19 @@ public class Game
         getColorSwitchers().add(new ColorSwitcher(colorswitcher_imageView)); //oops
         colorswitcher_imageView.setX(125);
         colorswitcher_imageView.setY(110);
-
+        
         Shape shape1=Shape.subtract(arc,innerCircle);
         shape1.setFill(Color.rgb(250,225,0));
+        shape1.setId("yellow");
         Shape shape2=Shape.subtract(arc2,innerCircle);
         shape2.setFill(Color.rgb(144, 13, 255));
+        shape2.setId("purple");
         Shape shape3=Shape.subtract(arc3,innerCircle);
         shape3.setFill(Color.rgb(255, 1, 129));
+        shape3.setId("pink")
         Shape shape4=Shape.subtract(arc4,innerCircle);
         shape4.setFill(Color.rgb(50, 219, 240));
+        shape4.setId("cyan");
         Group obstaclegroup=new Group(shape1,shape2,shape3,shape4);
         getObstacles().add(new Obstacle(obstaclegroup)); //oops
 
