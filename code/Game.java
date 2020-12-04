@@ -2,17 +2,14 @@ import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
-import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
@@ -22,12 +19,9 @@ import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.ObjectStreamClass;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Game
 {
@@ -132,16 +126,16 @@ public class Game
         starimageView2.setFitHeight(40);
         starimageView2.setFitWidth(40);
 
-        Rectangle rectangle=new Rectangle(75,220,150,20);
+        Rectangle rectangle=new Rectangle(75,220,130,20);
         rectangle.setFill(Color.rgb(250,225,0));
         rectangle.setId("yellow");
-        Rectangle rectangle2=new Rectangle(205,220,20,150);
+        Rectangle rectangle2=new Rectangle(205,220,20,130);
         rectangle2.setFill(Color.rgb(144,13,255));
         rectangle2.setId("purple");
-        Rectangle rectangle3=new Rectangle(75,350,150,20);
+        Rectangle rectangle3=new Rectangle(95,350,130,20);
         rectangle3.setFill(Color.rgb(255,1,129));
         rectangle3.setId("pink");
-        Rectangle rectangle4=new Rectangle(75,220,20,150);
+        Rectangle rectangle4=new Rectangle(75,240,20,130);
         rectangle4.setFill(Color.rgb(50,219,240));
         rectangle4.setId("cyan");
         Group obstaclegroup2=new Group(rectangle,rectangle2,rectangle3,rectangle4);
@@ -230,34 +224,26 @@ public class Game
                 double lower=ball.getCircle().getCenterY()+ball.getCircle().getRadius();
                 double upper=ball.getCircle().getCenterY()-ball.getCircle().getRadius();
 
-                for(Node shapey:obstaclegroup.getChildren())
-                {
-//                    if(shapey.getId().equals("star") && shapey.getBoundsInParent().getMinY()>=650)
-//                    {
-//                        shapey.setVisible(true);
-////                        if(shapey.isVisible() && ball.getCircle().intersects(shapey.getBoundsInLocal()))
-////                        {
-////                            System.out.println("hello");
-////                            //shapey.setVisible(false);
-////                        }
-//
-//                    }
-                    if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
+                for(Obstacle obstacle:obstacles){
+                    for(Node shapey:obstacle.getObstacleGroup().getChildren())
                     {
-                        Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
-                        if(intersect.getBoundsInParent().getWidth()>0)
+                        if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
                         {
-                            try {
-                                timer.stop();
-                                gameOver(primaryStage, window);
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
+                            Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
+                            if(intersect.getBoundsInParent().getWidth()>0)
+                            {
+                                try {
+                                    timer.stop();
+                                    gameOver(primaryStage, window);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
+
+
                 }
-
-
                 if(ball.getCircle().getCenterY()<550)
                 {
                     ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
