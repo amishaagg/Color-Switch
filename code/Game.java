@@ -84,11 +84,12 @@ public class Game
 
     Button btnPause;
     Stage window;
+    Scene scene1;
     public Game(Stage primaryStage) throws FileNotFoundException
     {
         window = new Stage();
         Group layout = new Group();
-        Scene scene = new Scene(layout);
+        scene1 = new Scene(layout);
         window.setWidth(300);
         window.setHeight(650);
         btnPause = new Button();
@@ -209,7 +210,7 @@ public class Game
         rotate2.setAxis(Rotate.Z_AXIS);
         rotate2.setByAngle(360);
         rotate2.setCycleCount(Animation.INDEFINITE);
-        rotate2.setDuration(Duration.millis(5000));
+        rotate2.setDuration(Duration.millis(10000));
         rotate2.setNode(obstaclegroup2);
         rotate2.play();
         final double[] obstacle_position = {-400};
@@ -221,29 +222,40 @@ public class Game
             @Override
             public void handle(long l)
             {
-                double lower=ball.getCircle().getCenterY()+ball.getCircle().getRadius();
-                double upper=ball.getCircle().getCenterY()-ball.getCircle().getRadius();
-
-                for(Obstacle obstacle:obstacles){
-                    for(Node shapey:obstacle.getObstacleGroup().getChildren())
+                for(Node shapey:obstaclegroup.getChildren())
+                {
+                    if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
                     {
-                        if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
+                        Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
+                        if(intersect.getBoundsInParent().getWidth()>0)
                         {
-                            Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
-                            if(intersect.getBoundsInParent().getWidth()>0)
-                            {
-                                try {
-                                    timer.stop();
-                                    gameOver(primaryStage, window);
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                }
+                            try {
+                                timer.stop();
+                                gameOver(primaryStage, window);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
                             }
                         }
                     }
-
-
                 }
+
+                for(Node shapey:obstaclegroup2.getChildren())
+                {
+                    if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
+                    {
+                        Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
+                        if(intersect.getBoundsInParent().getWidth()>0)
+                        {
+                            try {
+                                timer.stop();
+                                gameOver(primaryStage, window);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
                 if(ball.getCircle().getCenterY()<550)
                 {
                     ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
@@ -319,7 +331,7 @@ public class Game
         timer.start();
         if(ball.getCircle().getCenterY()<550)
             timer.stop();
-        scene.setOnKeyPressed(e->
+        scene1.setOnKeyPressed(e->
         {
             if(e.getCode()== KeyCode.Q)
             {
@@ -327,7 +339,7 @@ public class Game
                 jumping = true;
             }
         });
-        scene.setOnKeyReleased(e->jumping=false);
+        scene1.setOnKeyReleased(e->jumping=false);
         //layout.getChildren().addAll(big_star,btnPause,score_value);
         layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
         layout.getChildren().addAll(score_value, starimageView, starimageView2);
@@ -340,8 +352,8 @@ public class Game
                 fileNotFoundException.printStackTrace();
             }
         });
-        scene.setFill(Color.rgb(40,40,40));
-        window.setScene(scene);
+        scene1.setFill(Color.rgb(40,40,40));
+        window.setScene(scene1);
         window.show();
     }
 
@@ -389,7 +401,7 @@ public class Game
             window.close();
         });
         exit.setOnAction(e->exitToMainMenu(primaryStage, GameStage, window));
-        window.setOnCloseRequest(e->timer.start());
+        window.setOnCloseRequest(e-> timer.start() );
         resume.setLayoutX(65);
         resume.setLayoutY(150);
         save.setLayoutX(65);
@@ -405,8 +417,6 @@ public class Game
     {
         Group group = new Group();
         Scene scene = new Scene(group);
-        Stage window = new Stage();
-        GameStage.hide();
         Button restart = new Button();
         ImageView restartImageView = new ImageView(new Image(new FileInputStream("assets/restart.png")));
         restart.setGraphic(restartImageView);
@@ -430,7 +440,8 @@ public class Game
         high_score.setFill(Color.WHITE);
         restart.setOnAction(e->
         {
-            window.close();
+            e.consume();
+            //gameOverWindow.close();
             GameStage.close();
             try {
                 new Game(primaryStage);
@@ -440,16 +451,16 @@ public class Game
         });
         home.setOnAction(e->
         {
-            window.close();
+            //gameOverWindow.close();
             GameStage.close();
             primaryStage.show();
         });
         continue_using_stars.setOnAction(e->
         {
             timer.start();
-            window.close();
+            //gameOverWindow.close();
             ball.getCircle().setCenterY(ball.getCircle().getCenterY()+50);
-            GameStage.show();
+            GameStage.setScene(scene1);
         });
         group.getChildren().addAll(restart, home, continue_using_stars, scoreImageView, HighScoreImageView);
         group.getChildren().addAll(current_score, high_score);
@@ -461,11 +472,11 @@ public class Game
         current_score.setLayoutY(170);
         HighScoreImageView.setLayoutY(220);
         high_score.setLayoutY(270);
-        window.setScene(scene);
+        GameStage.setScene(scene);
         scene.setFill(Color.rgb(40,40,40));
-        window.setHeight(650);
-        window.setWidth(300);
-        window.show();
+//        gameOverWindow.setHeight(650);
+//        gameOverWindow.setWidth(300);
+//        gameOverWindow.show();
     }
 
     public void exitToMainMenu(Stage primaryStage, Stage GameStage, Stage window)
