@@ -1,6 +1,6 @@
 import javafx.application.Application;
-import java.nio.file.Paths;
-import javafx.geometry.Pos;
+
+import java.io.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -8,25 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import javax.print.DocFlavor;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.Serializable;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class MainMenu extends Application implements Serializable
@@ -170,30 +154,50 @@ public class MainMenu extends Application implements Serializable
         game5.setLayoutX(-10);
         game5.setLayoutY(290);
         game1.setOnAction(e->{
-            stage.close();
-            Game.setScore(12);
-            newGame(window);
+            Game object1 = null;
+            String filename="file.bin";
+            try{
+                // Reading the object from a file
+                FileInputStream file = new FileInputStream(filename);
+                ObjectInputStream in = new ObjectInputStream(file);
+                // Method for deserialization of object
+                object1 = (Game)in.readObject();
+                in.close();
+                file.close();
+                System.out.println("Object has been deserialized ");
+                System.out.println("a = " + object1.score);
+
+            }
+            catch(IOException ex)
+            {
+                System.out.println("IOException is caught");
+            }
+            catch(ClassNotFoundException ex)
+            {
+                System.out.println("ClassNotFoundException is caught");
+            }
+
         });
-        game2.setOnAction(e->{
-            stage.close();
-            Game.setScore(9);
-            newGame(window);
-        });
-        game3.setOnAction(e->{
-            stage.close();
-            Game.setScore(10);
-            newGame(window);
-        });
-        game4.setOnAction(e->{
-            stage.close();
-            Game.setScore(15);
-            newGame(window);
-        });
-        game5.setOnAction(e->{
-            stage.close();
-            Game.setScore(5);
-            newGame(window);
-        });
+//        game2.setOnAction(e->{
+//            stage.close();
+//            Game.setScore(9);
+//            newGame(window);
+//        });
+//        game3.setOnAction(e->{
+//            stage.close();
+//            Game.setScore(10);
+//            newGame(window);
+//        });
+//        game4.setOnAction(e->{
+//            stage.close();
+//            Game.setScore(15);
+//            newGame(window);
+//        });
+//        game5.setOnAction(e->{
+//            stage.close();
+//            Game.setScore(5);
+//            newGame(window);
+//        });
         Group layout2=new Group();
         layout2.getChildren().addAll(imageViewChoose, btnreturn);
         layout2.getChildren().addAll(game1, game2, game3, game4, game5);
