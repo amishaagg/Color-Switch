@@ -38,6 +38,8 @@ public class MainMenu extends Application implements Serializable
             new Game(window);
         } catch (FileNotFoundException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     };
     public void exitGame()
