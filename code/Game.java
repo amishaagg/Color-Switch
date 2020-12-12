@@ -86,7 +86,7 @@ public class Game implements Serializable
     transient Button btnPause;
     transient Stage window;
     transient Scene scene1;
-    public Game(Stage primaryStage) throws FileNotFoundException
+    public Game(Stage primaryStage) throws IOException
     {
         window = new Stage();
         Group layout = new Group();
@@ -226,19 +226,29 @@ public class Game implements Serializable
         highScore_broken_text.setLayoutX(30);
         highScore_broken_text.setLayoutY(570);
 
-        Scanner sc = new Scanner(new File("highscore.txt"));
-        int Highest_score = Integer.parseInt(sc.next());
+        int Highest_score = 0;
+        try {
+            Scanner sc = new Scanner(new File("highscore.txt"));
+            Highest_score = Integer.parseInt(sc.next());
+        }
+        catch (FileNotFoundException e)
+        {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("highscore.txt"));
+            writer.write(0+"");
+            writer.close();
+        }
         final double[] obstacle_position = {-400};
         final int[] i = {0};
         final int[] j = {0};
         final double[] speed = {2};
         final boolean[] highScorebroken = {false};
+        int finalHighest_score = Highest_score;
         timer = new AnimationTimer()
         {
             @Override
             public void handle(long l)
             {
-                if(getScore()>Highest_score && !highScorebroken[0])
+                if(getScore() > finalHighest_score && !highScorebroken[0])
                 {
                     highScorebroken[0] = true;
                     highScore_broken_text.setVisible(true);
@@ -514,8 +524,8 @@ public class Game implements Serializable
             GameStage.close();
             try {
                 new Game(primaryStage);
-            } catch (FileNotFoundException fileNotFoundException) {
-                fileNotFoundException.printStackTrace();
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         });
         home.setOnAction(e->
