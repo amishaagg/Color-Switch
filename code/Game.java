@@ -22,6 +22,7 @@ import javafx.util.Duration;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Game implements Serializable
 {
@@ -218,15 +219,35 @@ public class Game implements Serializable
         fingerImageView.setLayoutY(565);
         fingerImageView.setLayoutX(135);
 
+        Text highScore_broken_text = new Text(10.0, 30.0, "NEW HIGH-SCORE!");
+        highScore_broken_text.setFont(Font.font("Verdana", FontWeight.BOLD,  20));
+        highScore_broken_text.setFill(Color.CADETBLUE);
+        highScore_broken_text.setVisible(false);
+        highScore_broken_text.setLayoutX(30);
+        highScore_broken_text.setLayoutY(570);
+
+        Scanner sc = new Scanner(new File("highscore.txt"));
+        int Highest_score = Integer.parseInt(sc.next());
         final double[] obstacle_position = {-400};
         final int[] i = {0};
         final int[] j = {0};
         final double[] speed = {2};
+        final boolean[] highScorebroken = {false};
         timer = new AnimationTimer()
         {
             @Override
             public void handle(long l)
             {
+                if(getScore()>Highest_score && !highScorebroken[0])
+                {
+                    highScorebroken[0] = true;
+                    highScore_broken_text.setVisible(true);
+                    FadeTransition fadeTransition = new FadeTransition(Duration.millis(3000), highScore_broken_text);
+                    fadeTransition.setFromValue(10);
+                    fadeTransition.setToValue(0);
+                    fadeTransition.play();
+                }
+
                 if(fingerImageView.getBoundsInParent().getMinY()>=600)
                     fingerImageView.setVisible(false);
 
@@ -240,7 +261,7 @@ public class Game implements Serializable
                             try {
                                 timer.stop();
                                 gameOver(primaryStage, window);
-                            } catch (FileNotFoundException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -257,7 +278,7 @@ public class Game implements Serializable
                             try {
                                 timer.stop();
                                 gameOver(primaryStage, window);
-                            } catch (FileNotFoundException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -276,7 +297,7 @@ public class Game implements Serializable
                         try {
                             timer.stop();
                             gameOver(primaryStage, window);
-                        } catch (FileNotFoundException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -368,6 +389,7 @@ public class Game implements Serializable
         //layout.getChildren().addAll(big_star,btnPause,score_value);
         layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
         layout.getChildren().addAll(score_value, starimageView, starimageView2,btnPause,fingerImageView);
+        layout.getChildren().addAll(highScore_broken_text);
         obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
         btnPause.setOnAction(e-> {
             try {
@@ -415,10 +437,10 @@ public class Game implements Serializable
         save.setOnAction(e->
         {
             saved_text.setVisible(true);
-//            FadeTransition fadeTransition = new FadeTransition(Duration.millis(3000), saved_text);
-//            fadeTransition.setFromValue(10);
-//            fadeTransition.setToValue(0);
-//            fadeTransition.play();
+            FadeTransition fadeTransition = new FadeTransition(Duration.millis(3000), saved_text);
+            fadeTransition.setFromValue(10);
+            fadeTransition.setToValue(0);
+            fadeTransition.play();
             String filename="file.bin";
             try{FileOutputStream file = new FileOutputStream(filename);
                 ObjectOutputStream out = new ObjectOutputStream(file);
@@ -449,7 +471,7 @@ public class Game implements Serializable
         window.showAndWait();
     }
 
-    public void gameOver(Stage primaryStage, Stage GameStage) throws FileNotFoundException
+    public void gameOver(Stage primaryStage, Stage GameStage) throws IOException
     {
         Group group = new Group();
         Scene scene = new Scene(group);
@@ -471,7 +493,18 @@ public class Game implements Serializable
         Font font = Font.font("Verdana", FontWeight.NORMAL,  30);
         current_score.setFont(font);
         current_score.setFill(Color.WHITE);
-        Text high_score = new Text(10.0, 30.0, 19+"");
+
+        Scanner sc = new Scanner(new File("highscore.txt"));
+        int Highest_score = Integer.parseInt(sc.next());
+        if(getScore() > Highest_score)
+        {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("highscore.txt"));
+            writer.write(getScore()+"");
+            writer.close();
+            Highest_score = getScore();
+        }
+
+        Text high_score = new Text(10.0, 30.0, Highest_score+"");
         high_score.setFont(font);
         high_score.setFill(Color.WHITE);
         restart.setOnAction(e->
