@@ -1,3 +1,4 @@
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 
 import java.io.*;
@@ -69,8 +70,6 @@ public class MainMenu extends Application implements Serializable
         btnExitGame=new Button();
         Image exit = new Image(new FileInputStream("assets/exit.png"));
         ImageView imageViewExit = new ImageView(exit);
-        imageViewExit.setFitHeight(40);
-        imageViewExit.setFitWidth(40);
         btnExitGame.setGraphic(imageViewExit);
         btnExitGame.setBackground(Background.EMPTY);
         btnNewGame.setOnAction(e->newGame(window));
@@ -85,6 +84,19 @@ public class MainMenu extends Application implements Serializable
         });
         btnExitGame.setOnAction(e->exitGame());
 
+        Button btnMusic = new Button();
+        ImageView imageViewMusic = new ImageView(new Image(new FileInputStream("assets/music.png")));
+        ImageView imageViewNoMusic = new ImageView(new Image(new FileInputStream("assets/no_music.png")));
+        btnMusic.setGraphic(imageViewMusic);
+        btnMusic.setBackground(Background.EMPTY);
+        btnMusic.setOnAction(e->
+        {
+            if(btnMusic.getGraphic().equals(imageViewMusic))
+                btnMusic.setGraphic(imageViewNoMusic);
+            else
+                btnMusic.setGraphic(imageViewMusic);
+        });
+
         Image image = new Image(new FileInputStream("assets/mainmenu.png"));
         ImageView imageView = new ImageView(image);
         imageView.setX(-5);
@@ -94,16 +106,17 @@ public class MainMenu extends Application implements Serializable
         window.setHeight(700);
         window.setWidth(400);
         Group layout1 = new Group(imageView);
-        layout1.getChildren().addAll(btnNewGame,btnResumeGame,btnExitGame);
+        layout1.getChildren().addAll(btnNewGame,btnResumeGame,btnExitGame,btnMusic);
         btnNewGame.setPrefWidth(80);
         btnNewGame.setLayoutX(160);
         btnNewGame.setLayoutY(300);
         btnResumeGame.setPrefWidth(80);
         btnResumeGame.setLayoutX(100);
         btnResumeGame.setLayoutY(480);
-        btnExitGame.setPrefWidth(80);
-        btnExitGame.setLayoutX(300);
+        btnExitGame.setLayoutX(310);
         btnExitGame.setLayoutY(70);
+        btnMusic.setLayoutX(10);
+        btnMusic.setLayoutY(65);
         scene1=new Scene(layout1,300,300);
         window.setScene(scene1);
         window.show();
@@ -165,7 +178,7 @@ public class MainMenu extends Application implements Serializable
                 in.close();
                 file.close();
                 System.out.println("Object has been deserialized ");
-                System.out.println("a = " + object1.score);
+                System.out.println("a = " + object1.getScore());
 
             }
             catch(IOException ex)
