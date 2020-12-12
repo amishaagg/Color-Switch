@@ -19,19 +19,19 @@ import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
+import java.io.*;
 import java.util.ArrayList;
 
-public class Game
+public class Game implements Serializable
 {
     private static ArrayList<GameElement> gameElements = new ArrayList<>();
     private static ArrayList<Obstacle> obstacles = new ArrayList<>();
     private static ArrayList<Star> stars = new ArrayList<>();
     private static ArrayList<ColorSwitcher> colorSwitchers = new ArrayList<>();
     private static Ball ball;
-    private static int score;
-    AnimationTimer timer;
+    int score;
+    transient AnimationTimer timer;
     boolean jumping;
 
     public static ArrayList<GameElement> getGameElements() {
@@ -74,17 +74,17 @@ public class Game
         Game.ball = ball;
     }
 
-    public static int getScore() {
+    public int getScore() {
         return score;
     }
 
-    public static void setScore(int score) {
-        Game.score = score;
+    public void setScore(int score) {
+        this.score = score;
     }
 
-    Button btnPause;
-    Stage window;
-    Scene scene1;
+    transient Button btnPause;
+    transient Stage window;
+    transient Scene scene1;
     public Game(Stage primaryStage) throws FileNotFoundException
     {
         window = new Stage();
@@ -265,7 +265,7 @@ public class Game
                     for(Star s: getStars())
                     {
                         if(jumping)
-                            s.getStar().setLayoutY(s.getStar().getLayoutY()+7);
+                            s.getStarImageView().setLayoutY(s.getStarImageView().getLayoutY()+7);
                     }
 
                     if(starimageView.getBoundsInParent().getMinY()>=650)
@@ -313,9 +313,10 @@ public class Game
 
                 for(Star s: getStars())
                 {
-                    if(s.getStar().isVisible() && ball.getCircle().intersects(s.getStar().getBoundsInParent()))
+                    if(s.getStarImageView().isVisible() && ball.getCircle().intersects(s.getStarImageView().getBoundsInParent()))
                     {
-                        s.vanish();
+                        s.getStarImageView().setVisible(false);
+                        score++;
                         score_value.setText(getScore()+"");
                     }
                 }
@@ -342,7 +343,7 @@ public class Game
         scene1.setOnKeyReleased(e->jumping=false);
         //layout.getChildren().addAll(big_star,btnPause,score_value);
         layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
-        layout.getChildren().addAll(score_value, starimageView, starimageView2);
+        layout.getChildren().addAll(score_value, starimageView, starimageView2,btnPause);
         obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
         btnPause.setOnAction(e-> {
             try {
@@ -390,10 +391,21 @@ public class Game
         save.setOnAction(e->
         {
             saved_text.setVisible(true);
-            FadeTransition fadeTransition = new FadeTransition(Duration.millis(3000), saved_text);
-            fadeTransition.setFromValue(10);
-            fadeTransition.setToValue(0);
-            fadeTransition.play();
+//            FadeTransition fadeTransition = new FadeTransition(Duration.millis(3000), saved_text);
+//            fadeTransition.setFromValue(10);
+//            fadeTransition.setToValue(0);
+//            fadeTransition.play();
+            String filename="file.bin";
+            try{FileOutputStream file = new FileOutputStream(filename);
+                ObjectOutputStream out = new ObjectOutputStream(file);
+                out.writeObject(this);
+                out.close();
+                file.close();
+                System.out.println("Object has been serialized");
+            }
+            catch(IOException ex){
+                ex.printStackTrace();
+            }
         });
         resume.setOnAction(e->
         {
