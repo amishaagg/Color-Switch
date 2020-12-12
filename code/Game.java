@@ -33,7 +33,6 @@ public class Game implements Serializable
     private Ball ball;
     private int score;
     transient AnimationTimer timer;
-    boolean jumping;
 
     public ArrayList<GameElement> getGameElements() {
         return gameElements;
@@ -248,6 +247,7 @@ public class Game implements Serializable
             @Override
             public void handle(long l)
             {
+                score_value.setText(getScore()+"");
                 if(getScore() > finalHighest_score && !highScorebroken[0])
                 {
                     highScorebroken[0] = true;
@@ -317,11 +317,11 @@ public class Game implements Serializable
                 {
                     for(Star s: getStars())
                     {
-                        if(jumping)
+                        if(ball.isJumping())
                             s.getStarImageView().setLayoutY(s.getStarImageView().getLayoutY()+7);
                     }
 
-                    if(jumping)
+                    if(ball.isJumping())
                         fingerImageView.setLayoutY(fingerImageView.getLayoutY()+7);
                     if(starimageView.getBoundsInParent().getMinY()>=650)
                     {
@@ -338,7 +338,7 @@ public class Game implements Serializable
 
                     for(Obstacle obstacle: getObstacles())
                     {
-                        if(jumping)
+                        if(ball.isJumping())
                         {
                             obstacle.getObstacleGroup().setLayoutY(obstacle.getObstacleGroup().getLayoutY() + 7);
                         }
@@ -350,7 +350,7 @@ public class Game implements Serializable
 
                     for(ColorSwitcher c: getColorSwitchers())
                     {
-                        if(jumping)
+                        if(ball.isJumping())
                             c.getColorSwitcher().setLayoutY(c.getColorSwitcher().getLayoutY()+7);
                         if(c.getColorSwitcher().getBoundsInParent().getMinY()>=650)
                         {
@@ -392,10 +392,10 @@ public class Game implements Serializable
             if(e.getCode()== KeyCode.Q)
             {
                 ball.jump();
-                jumping = true;
+                ball.setJumping(true);
             }
         });
-        scene1.setOnKeyReleased(e->jumping=false);
+        scene1.setOnKeyReleased(e-> ball.setJumping(false));
         //layout.getChildren().addAll(big_star,btnPause,score_value);
         layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
         layout.getChildren().addAll(score_value, starimageView, starimageView2,btnPause,fingerImageView);
@@ -504,6 +504,11 @@ public class Game implements Serializable
         current_score.setFont(font);
         current_score.setFill(Color.WHITE);
 
+        ImageView not_enough_stars = new ImageView(new Image(new FileInputStream("assets/no_stars.png")));
+        not_enough_stars.setVisible(false);
+        not_enough_stars.setLayoutY(480);
+        not_enough_stars.setLayoutX(45);
+
         Scanner sc = new Scanner(new File("highscore.txt"));
         int Highest_score = Integer.parseInt(sc.next());
         if(getScore() > Highest_score)
@@ -536,13 +541,28 @@ public class Game implements Serializable
         });
         continue_using_stars.setOnAction(e->
         {
-            timer.start();
-            //gameOverWindow.close();
-            ball.getCircle().setCenterY(ball.getCircle().getCenterY()+50);
-            GameStage.setScene(scene1);
+            if(getScore()>=5)
+            {
+                timer.start();
+                setScore(getScore()-5);
+                ball.setJumping(false);
+                if(ball.getCircle().getCenterY()>=650)
+                    ball.getCircle().setCenterY(550);
+                else
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + 50);
+                GameStage.setScene(scene1);
+            }
+            else
+            {
+                not_enough_stars.setVisible(true);
+                FadeTransition fadeTransition = new FadeTransition(Duration.millis(2000), not_enough_stars);
+                fadeTransition.setFromValue(10);
+                fadeTransition.setToValue(0);
+                fadeTransition.play();
+            }
         });
         group.getChildren().addAll(restart, home, continue_using_stars, scoreImageView, HighScoreImageView);
-        group.getChildren().addAll(current_score, high_score);
+        group.getChildren().addAll(current_score, high_score, not_enough_stars);
         restart.setLayoutX(105);
         restart.setLayoutY(330);
         continue_using_stars.setLayoutX(65);
