@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class ColorSwitcher
 {
-    private ImageView colorSwitcher;
+    private transient ImageView colorSwitcher;
 
     public ColorSwitcher(ImageView colorSwitcher)
     {
