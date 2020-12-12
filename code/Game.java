@@ -213,6 +213,11 @@ public class Game implements Serializable
         rotate2.setDuration(Duration.millis(10000));
         rotate2.setNode(obstaclegroup2);
         rotate2.play();
+
+        ImageView fingerImageView = new ImageView(new Image(new FileInputStream("assets/finger.png")));
+        fingerImageView.setLayoutY(565);
+        fingerImageView.setLayoutX(135);
+
         final double[] obstacle_position = {-400};
         final int[] i = {0};
         final int[] j = {0};
@@ -222,6 +227,9 @@ public class Game implements Serializable
             @Override
             public void handle(long l)
             {
+                if(fingerImageView.getBoundsInParent().getMinY()>=600)
+                    fingerImageView.setVisible(false);
+
                 for(Node shapey:obstaclegroup.getChildren())
                 {
                     if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
@@ -256,9 +264,23 @@ public class Game implements Serializable
                     }
                 }
 
-                if(ball.getCircle().getCenterY()<550)
+                if(ball.getCircle().getCenterY()<550 && fingerImageView.isVisible())
                 {
                     ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
+                }
+                if(!fingerImageView.isVisible())
+                {
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
+                    if(ball.getCircle().getBoundsInParent().getMinY()>=650)
+                    {
+                        try {
+                            timer.stop();
+                            gameOver(primaryStage, window);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                 }
                 if(ball.getCircle().getCenterY()<300)
                 {
@@ -268,6 +290,8 @@ public class Game implements Serializable
                             s.getStarImageView().setLayoutY(s.getStarImageView().getLayoutY()+7);
                     }
 
+                    if(jumping)
+                        fingerImageView.setLayoutY(fingerImageView.getLayoutY()+7);
                     if(starimageView.getBoundsInParent().getMinY()>=650)
                     {
                         if(obstacle_position[0]<=-401)
@@ -343,7 +367,7 @@ public class Game implements Serializable
         scene1.setOnKeyReleased(e->jumping=false);
         //layout.getChildren().addAll(big_star,btnPause,score_value);
         layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
-        layout.getChildren().addAll(score_value, starimageView, starimageView2,btnPause);
+        layout.getChildren().addAll(score_value, starimageView, starimageView2,btnPause,fingerImageView);
         obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
         btnPause.setOnAction(e-> {
             try {
