@@ -25,53 +25,53 @@ import java.util.ArrayList;
 
 public class Game implements Serializable
 {
-    private static ArrayList<GameElement> gameElements = new ArrayList<>();
-    private static ArrayList<Obstacle> obstacles = new ArrayList<>();
-    private static ArrayList<Star> stars = new ArrayList<>();
-    private static ArrayList<ColorSwitcher> colorSwitchers = new ArrayList<>();
-    private static Ball ball;
-    int score;
+    private ArrayList<GameElement> gameElements = new ArrayList<>();
+    private ArrayList<Obstacle> obstacles = new ArrayList<>();
+    private ArrayList<Star> stars = new ArrayList<>();
+    private ArrayList<ColorSwitcher> colorSwitchers = new ArrayList<>();
+    private Ball ball;
+    private int score;
     transient AnimationTimer timer;
     boolean jumping;
 
-    public static ArrayList<GameElement> getGameElements() {
+    public ArrayList<GameElement> getGameElements() {
         return gameElements;
     }
 
-    public static void setGameElements(ArrayList<GameElement> gameElements) {
-        Game.gameElements = gameElements;
+    public void setGameElements(ArrayList<GameElement> gameElements) {
+        this.gameElements = gameElements;
     }
 
-    public static ArrayList<Obstacle> getObstacles() {
+    public ArrayList<Obstacle> getObstacles() {
         return obstacles;
     }
 
-    public static void setObstacles(ArrayList<Obstacle> obstacles) {
-        Game.obstacles = obstacles;
+    public void setObstacles(ArrayList<Obstacle> obstacles) {
+        this.obstacles = obstacles;
     }
 
-    public static ArrayList<Star> getStars() {
+    public ArrayList<Star> getStars() {
         return stars;
     }
 
-    public static void setStars(ArrayList<Star> stars) {
-        Game.stars = stars;
+    public void setStars(ArrayList<Star> stars) {
+        this.stars = stars;
     }
 
-    public static ArrayList<ColorSwitcher> getColorSwitchers() {
+    public ArrayList<ColorSwitcher> getColorSwitchers() {
         return colorSwitchers;
     }
 
-    public static void setColorSwitchers(ArrayList<ColorSwitcher> colorSwitchers) {
-        Game.colorSwitchers = colorSwitchers;
+    public void setColorSwitchers(ArrayList<ColorSwitcher> colorSwitchers) {
+        this.colorSwitchers = colorSwitchers;
     }
 
-    public static Ball getBall() {
+    public Ball getBall() {
         return ball;
     }
 
-    public static void setBall(Ball ball) {
-        Game.ball = ball;
+    public void setBall(Ball ball) {
+        this.ball = ball;
     }
 
     public int getScore() {
