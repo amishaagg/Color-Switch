@@ -3,8 +3,8 @@ import javafx.scene.shape.Circle;
 public class Ball extends GameElement
 {
     private String color;
-    private boolean alive;
-    private Circle circle;
+    private boolean jumping;
+    private transient Circle circle;
     public void jump()
     {
         this.circle.setCenterY(circle.getCenterY()-50);
@@ -32,11 +32,11 @@ public class Ball extends GameElement
         this.color = color;
     }
 
-    public boolean isAlive() {
-        return alive;
+    public boolean isJumping() {
+        return jumping;
     }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
+    public void setJumping(boolean jumping) {
+        this.jumping = jumping;
     }
 }
