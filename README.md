@@ -1,1 +1,1 @@
-Amisha.getIQ()==AliaBhatt.getIQ()
+Yash.getIQ()==AliaBhatt.getIQ()
