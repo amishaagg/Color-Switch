@@ -1,1 +1,1 @@
-Yash.getIQ()==AliaBhatt.getIQ()
+okay, everyone is smart
