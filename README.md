@@ -1,1 +1,2 @@
-okay, everyone is smart
+okay, everyone is smart.
+(Amisha ∉ everyone)
