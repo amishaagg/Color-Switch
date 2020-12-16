@@ -33,6 +33,12 @@ public class Game implements Serializable
     private Ball ball;
     private int score;
     transient AnimationTimer timer;
+    private Finger myfinger;
+    transient Button btnPause;
+    transient Stage window;
+    transient Scene scene1;
+    public Game() throws IOException
+    { }
 
     public Finger getMyfinger() {
         return myfinger;
@@ -41,35 +47,6 @@ public class Game implements Serializable
     public void setMyfinger(Finger myfinger) {
         this.myfinger = myfinger;
     }
-
-    //    private double finger_X;
-//    private double finger_Y;
-//    private boolean fingerimagevisible=true;
-    private Finger myfinger;
-
-//    public boolean isFingerimagevisible() {
-//        return fingerimagevisible;
-//    }
-//
-//    public void setFingerimagevisible(boolean fingerimagevisible) {
-//        this.fingerimagevisible = fingerimagevisible;
-//    }
-//
-//    public double getFinger_X() {
-//        return finger_X;
-//    }
-//
-//    public void setFinger_X(double finger_X) {
-//        this.finger_X = finger_X;
-//    }
-//
-//    public double getFinger_Y() {
-//        return finger_Y;
-//    }
-//
-//    public void setFinger_Y(double finger_Y) {
-//        this.finger_Y = finger_Y;
-//    }
 
     public ArrayList<GameElement> getGameElements() {
         return gameElements;
@@ -119,11 +96,6 @@ public class Game implements Serializable
         this.score = score;
     }
 
-    transient Button btnPause;
-    transient Stage window;
-    transient Scene scene1;
-    public Game() throws IOException
-    { }
 
     public void pause(Stage GameStage, Stage primaryStage) throws FileNotFoundException
     {
@@ -374,7 +346,6 @@ public class Game implements Serializable
         getObstacles().add(obstacle2); //oops
 
 
-
         RotateTransition rotate = new RotateTransition();
         rotate.setAxis(Rotate.Z_AXIS);
         rotate.setByAngle(360);
@@ -395,14 +366,15 @@ public class Game implements Serializable
         ball = new Ball(circle, "yellow"); //oops
 
         ImageView colorswitcher_imageView = new ImageView(new Image(new FileInputStream("assets/ColorSwitcher.png")));
-        getColorSwitchers().add(new ColorSwitcher(colorswitcher_imageView)); //oops
         colorswitcher_imageView.setX(125);
         colorswitcher_imageView.setY(110);
-
+        getColorSwitchers().add(new ColorSwitcher(colorswitcher_imageView)); //oops
 
         ImageView fingerImageView = new ImageView(new Image(new FileInputStream("assets/finger.png")));
         fingerImageView.setLayoutY(565);
         fingerImageView.setLayoutX(135);
+        System.out.println("Finger X= "+fingerImageView.getLayoutX());
+        System.out.println("Finger Y= "+fingerImageView.getLayoutY());
         myfinger=new Finger(fingerImageView);
 
 
@@ -511,9 +483,14 @@ public class Game implements Serializable
                 {
                     for(Star s: getStars())
                     {
-                        if(ball.isJumping())
-                            s.getStarImageView().setLayoutY(s.getStarImageView().getLayoutY()+7);
+
+
                     }
+                    if(ball.isJumping())
+                        starimageView.setLayoutY(starimageView.getLayoutY()+7);
+
+                    if(ball.isJumping())
+                        starimageView2.setLayoutY(starimageView2.getLayoutY()+7);
 
                     if(ball.isJumping())
                         myfinger.getFingerImageView().setLayoutY(myfinger.getFingerImageView().getLayoutY()+7);
@@ -597,37 +574,42 @@ public class Game implements Serializable
         obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
         btnPause.setOnAction(e-> {
             try {
-//                finger_X=fingerImageView.getLayoutX();
-//                finger_Y=fingerImageView.getLayoutY();
-                myfinger.setVisible(myfinger.getFingerImageView().isVisible());
-                myfinger.setX(myfinger.getFingerImageView().getX());
-                myfinger.setY(myfinger.getFingerImageView().getY());
-                System.out.println("asshole");
-                for(Obstacle obs:getObstacles()) {
-                    Group obsGroup = obs.getObstacleGroup();
-                    for(Node shapey:obsGroup.getChildren()){
-                        System.out.println(shapey.getBoundsInParent());
-                    }
-
-                    ArrayList<Double> positions=new ArrayList<>();
-                    positions.add(obsGroup.getLayoutX());
-                    positions.add(obsGroup.getLayoutY());
-                    positions.add(obsGroup.getRotate());
-                    System.out.println("OBs group X= "+obsGroup.getLayoutX());
-                    System.out.println("OBs group Y= "+obsGroup.getLayoutY());
-                    obs.setCoordinates(positions);
-                }
+                myfinger.setVisible(fingerImageView.isVisible());
+                myfinger.setX(fingerImageView.getLayoutX());
+                myfinger.setY(fingerImageView.getLayoutY());
+                ArrayList<Double> positions=new ArrayList<>();
+                positions.add(obstaclegroup.getLayoutX());
+                positions.add(obstaclegroup.getLayoutY());
+                positions.add(obstaclegroup.getRotate());
+                System.out.println("OBs group X= "+obstaclegroup.getLayoutX());
+                System.out.println("OBs group Y= "+obstaclegroup.getLayoutY());
+                getObstacles().get(0).setCoordinates(positions);
+                ArrayList<Double> positions2=new ArrayList<>();
+                positions2.add(obstaclegroup2.getLayoutX());
+                positions2.add(obstaclegroup2.getLayoutY());
+                positions2.add(obstaclegroup2.getRotate());
+                System.out.println("OBs group2 X= "+obstaclegroup2.getLayoutX());
+                System.out.println("OBs group2 Y= "+obstaclegroup2.getLayoutY());
+                getObstacles().get(1).setCoordinates(positions2);
+                ImageView img=colorswitcher_imageView;
+                getColorSwitchers().get(0).setX(img.getX());
+                getColorSwitchers().get(0).setY(img.getY());
+                getColorSwitchers().get(0).setVisible(img.isVisible());
                 for(ColorSwitcher c:getColorSwitchers()){
-                    ImageView img=c.getColorSwitcher();
-                    c.setX(img.getX());
-                    c.setY(img.getY());
-                    c.setVisible(img.isVisible());
+
                 }
+
+                img=starimageView;
+                getStars().get(0).setX(img.getX());
+                getStars().get(0).setY(img.getY());
+                getStars().get(0).setVisible(img.isVisible());
+
+                ImageView img2=starimageView2;
+                getStars().get(1).setX(img2.getX());
+                getStars().get(1).setY(img2.getY());
+                getStars().get(1).setVisible(img2.isVisible());
                 for(Star s:getStars()){
-                    ImageView img=s.getStarImageView();
-                    s.setX(img.getX());
-                    s.setY(img.getY());
-                    s.setVisible(img.isVisible());
+
                 }
                 Circle circ=ball.getCircle();
                 ball.setX(circ.getCenterX());
@@ -660,7 +642,7 @@ public class Game implements Serializable
 
 
     public void savedGame(Stage primaryStage,int score2,ArrayList<Star> stars2,
-                          ArrayList<Obstacle> obstacles2,Ball ball2,
+                          ArrayList<Obstacle> obstacles2, Ball ball2,
                           ArrayList<ColorSwitcher> colorswitchers2,Finger finger2
 
                           ) throws IOException {
@@ -693,51 +675,23 @@ public class Game implements Serializable
         this.stars=stars2;
         ImageView starimageView = new ImageView(new Image(new FileInputStream("assets/star.png")));
         starimageView.setId("star");
-        starimageView.setFitHeight(40);
-        starimageView.setFitWidth(40);
         starimageView.setVisible(this.stars.get(0).isVisible());
         starimageView.setX(this.stars.get(0).getX());
         starimageView.setY(this.stars.get(0).getY());
+        starimageView.setFitHeight(40);
+        starimageView.setFitWidth(40);
         this.stars.get(0).setStarImageView(starimageView);
 
         ImageView starimageView2 = new ImageView(new Image(new FileInputStream("assets/star.png")));
         starimageView2.setId("star");
-        starimageView2.setFitHeight(40);
-        starimageView2.setFitWidth(40);
         starimageView2.setVisible(this.stars.get(1).isVisible());
         starimageView2.setX(stars.get(1).getX());
         starimageView2.setY(stars.get(1).getY());
+        starimageView2.setFitHeight(40);
+        starimageView2.setFitWidth(40);
         this.stars.get(1).setStarImageView(starimageView2);
 
         this.obstacles = obstacles2;
-        Rectangle rectangle = new Rectangle(75, 220, 130, 20);
-        rectangle.setFill(Color.rgb(250, 225, 0));
-        rectangle.setId("yellow");
-        Rectangle rectangle2 = new Rectangle(205, 220, 20, 130);
-        rectangle2.setFill(Color.rgb(144, 13, 255));
-        rectangle2.setId("purple");
-        Rectangle rectangle3 = new Rectangle(95, 350, 130, 20);
-        rectangle3.setFill(Color.rgb(255, 1, 129));
-        rectangle3.setId("pink");
-        Rectangle rectangle4 = new Rectangle(75, 240, 20, 130);
-        rectangle4.setFill(Color.rgb(50, 219, 240));
-        rectangle4.setId("cyan");
-        Group obstaclegroup2 = new Group(rectangle, rectangle2, rectangle3, rectangle4);
-        System.out.println(this.obstacles.get(1).getType());
-        double X=this.obstacles.get(1).getCoordinates().get(0);
-        double Y=this.obstacles.get(1).getCoordinates().get(1);
-        double Rotation=this.obstacles.get(1).getCoordinates().get(2);
-        obstaclegroup2.setLayoutX(X);
-        obstaclegroup2.setLayoutY(Y);
-        obstaclegroup2.setRotate(Rotation);
-        RotateTransition rotate2 = new RotateTransition();
-        rotate2.setAxis(Rotate.Z_AXIS);
-        rotate2.setByAngle(360);
-        rotate2.setCycleCount(Animation.INDEFINITE);
-        rotate2.setDuration(Duration.millis(5000));
-        rotate2.setNode(obstaclegroup2);
-        rotate2.play();
-        this.obstacles.get(1).setObstacleGroup(obstaclegroup2);
 
         Arc arc = new Arc(150.0, 300.0, 100.0, 100.0, 0.0, 90.0);
         arc.setType(ArcType.ROUND);
@@ -768,9 +722,9 @@ public class Game implements Serializable
         shape4.setFill(Color.rgb(50, 219, 240));
         shape4.setId("cyan");
         Group obstaclegroup = new Group(shape1, shape2, shape3, shape4);
-        X=this.obstacles.get(0).getCoordinates().get(0);
-        Y=this.obstacles.get(0).getCoordinates().get(1);
-        Rotation=this.obstacles.get(0).getCoordinates().get(2);
+        double X=this.obstacles.get(0).getCoordinates().get(0);
+        double Y=this.obstacles.get(0).getCoordinates().get(1);
+        double Rotation=this.obstacles.get(0).getCoordinates().get(2);
         obstaclegroup.setLayoutX(X);
         obstaclegroup.setLayoutY(Y);
         obstaclegroup.setRotate(Rotation);
@@ -782,6 +736,35 @@ public class Game implements Serializable
         rotate.setNode(obstaclegroup);
         rotate.play();
         this.obstacles.get(0).setObstacleGroup(obstaclegroup);
+
+        Rectangle rectangle = new Rectangle(75, 220, 130, 20);
+        rectangle.setFill(Color.rgb(250, 225, 0));
+        rectangle.setId("yellow");
+        Rectangle rectangle2 = new Rectangle(205, 220, 20, 130);
+        rectangle2.setFill(Color.rgb(144, 13, 255));
+        rectangle2.setId("purple");
+        Rectangle rectangle3 = new Rectangle(95, 350, 130, 20);
+        rectangle3.setFill(Color.rgb(255, 1, 129));
+        rectangle3.setId("pink");
+        Rectangle rectangle4 = new Rectangle(75, 240, 20, 130);
+        rectangle4.setFill(Color.rgb(50, 219, 240));
+        rectangle4.setId("cyan");
+        Group obstaclegroup2 = new Group(rectangle, rectangle2, rectangle3, rectangle4);
+        System.out.println(this.obstacles.get(1).getType());
+        X=this.obstacles.get(1).getCoordinates().get(0);
+        Y=this.obstacles.get(1).getCoordinates().get(1);
+        Rotation=this.obstacles.get(1).getCoordinates().get(2);
+        obstaclegroup2.setLayoutX(X);
+        obstaclegroup2.setLayoutY(Y);
+        obstaclegroup2.setRotate(Rotation);
+        RotateTransition rotate2 = new RotateTransition();
+        rotate2.setAxis(Rotate.Z_AXIS);
+        rotate2.setByAngle(360);
+        rotate2.setCycleCount(Animation.INDEFINITE);
+        rotate2.setDuration(Duration.millis(5000));
+        rotate2.setNode(obstaclegroup2);
+        rotate2.play();
+        this.obstacles.get(1).setObstacleGroup(obstaclegroup2);
 
 
         this.ball = ball2;
@@ -803,16 +786,16 @@ public class Game implements Serializable
 
         this.colorSwitchers=colorswitchers2;
         ImageView colorswitcher_imageView = new ImageView(new Image(new FileInputStream("assets/ColorSwitcher.png")));
-        colorswitcher_imageView.setTranslateX(colorSwitchers.get(0).getX());
-        colorswitcher_imageView.setTranslateY(colorSwitchers.get(0).getY());
+        colorswitcher_imageView.setX(colorSwitchers.get(0).getX());
+        colorswitcher_imageView.setY(colorSwitchers.get(0).getY());
         colorswitcher_imageView.setVisible(colorSwitchers.get(0).isVisible());
         colorSwitchers.get(0).setColorSwitcher(colorswitcher_imageView);
 
 
         ImageView fingerImageView = new ImageView(new Image(new FileInputStream("assets/finger.png")));
-        fingerImageView.setX(myfinger.getX());
-        fingerImageView.setY(myfinger.getY());
-        fingerImageView.setVisible(myfinger.isVisible());
+        fingerImageView.setLayoutX(finger2.getX());
+        fingerImageView.setLayoutY(finger2.getY());
+        fingerImageView.setVisible(finger2.isVisible());
         myfinger.setFingerImageView(fingerImageView);
 
         Text highScore_broken_text = new Text(10.0, 30.0, "NEW HIGH-SCORE!");
@@ -915,14 +898,21 @@ public class Game implements Serializable
                 }
                 if(ball.getCircle().getCenterY()<300)
                 {
-                    for(Star s: getStars())
-                    {
-                        if(ball.isJumping())
-                            s.getStarImageView().setLayoutY(s.getStarImageView().getLayoutY()+7);
-                    }
+//                    for(Star s: getStars())
+//                    {
+//                        if(ball.isJumping())
+//                            s.getStarImageView().setLayoutY(s.getStarImageView().getLayoutY()+7);
+//                    }
 
                     if(ball.isJumping())
-                        fingerImageView.setLayoutY(fingerImageView.getLayoutY()+7);
+                        starimageView.setLayoutY(starimageView.getLayoutY()+7);
+
+                    if(ball.isJumping())
+                        starimageView2.setLayoutY(starimageView2.getLayoutY()+7);
+
+
+                    if(ball.isJumping())
+                        myfinger.getFingerImageView().setLayoutY(myfinger.getFingerImageView().getLayoutY()+7);
                     if(starimageView.getBoundsInParent().getMinY()>=650)
                     {
                         if(obstacle_position[0]<=-401)
@@ -1002,26 +992,44 @@ public class Game implements Serializable
         layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
         layout.getChildren().addAll(score_value, starimageView, starimageView2,btnPause,fingerImageView);
         layout.getChildren().addAll(highScore_broken_text);
-        obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
+        //obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
         btnPause.setOnAction(e-> {
             try {
+                myfinger.setVisible(myfinger.getFingerImageView().isVisible());
+                myfinger.setX(myfinger.getFingerImageView().getX());
+                myfinger.setY(myfinger.getFingerImageView().getY());
+
+//                Group obsGroup = getObstacles().get(0).getObstacleGroup();
+                ArrayList<Double> positions=new ArrayList<>();
+                positions.add(obstaclegroup.getLayoutX());
+                positions.add(obstaclegroup.getLayoutY());
+                positions.add(obstaclegroup.getRotate());
+                System.out.println("OBs group X= "+obstaclegroup.getLayoutX());
+                System.out.println("OBs group Y= "+obstaclegroup.getLayoutY());
+                getObstacles().get(0).setCoordinates(positions);
+                positions=new ArrayList<>();
+                positions.add(obstaclegroup2.getLayoutX());
+                positions.add(obstaclegroup2.getLayoutY());
+                positions.add(obstaclegroup2.getRotate());
+                System.out.println("OBs group2 X= "+obstaclegroup2.getLayoutX());
+                System.out.println("OBs group2 Y= "+obstaclegroup2.getLayoutY());
+                getObstacles().get(1).setCoordinates(positions);
+
+
                 for(Obstacle obs:getObstacles()) {
-                    Group obsGroup = obs.getObstacleGroup();
-                    ArrayList<Double> positions=new ArrayList<>();
-                    positions.add(obsGroup.getLayoutX());
-                    positions.add(obsGroup.getLayoutY());
-                    positions.add(obsGroup.getRotate());
-                    obs.setCoordinates(positions);
+
                 }
                 for(ColorSwitcher c:getColorSwitchers()){
                     ImageView img=c.getColorSwitcher();
                     c.setX(img.getX());
                     c.setY(img.getY());
+                    c.setVisible(img.isVisible());
                 }
                 for(Star s:getStars()){
                     ImageView img=s.getStarImageView();
                     s.setX(img.getX());
                     s.setY(img.getY());
+                    s.setVisible(img.isVisible());
                 }
                 Circle circ=ball.getCircle();
                 ball.setX(circ.getCenterX());
