@@ -1,8 +1,19 @@
 import javafx.scene.image.ImageView;
 
+
 public class Star extends GameElement
 {
     private int value;
+    private boolean Visible;
+
+    public boolean isVisible() {
+        return Visible;
+    }
+
+    public void setVisible(boolean visible) {
+        Visible = visible;
+    }
+
     private transient ImageView starImageView;
 
     public Star(ImageView star)
@@ -14,7 +25,7 @@ public class Star extends GameElement
         return starImageView;
     }
 
-    public void setStar(ImageView starImageView) {
+    public void setStarImageView(ImageView starImageView) {
         this.starImageView = starImageView;
     }
 
@@ -26,9 +37,4 @@ public class Star extends GameElement
         return value;
     }
 
-//    public void vanish(Game game)
-//    {
-//        this.starImageView.setVisible(false);
-//        Game.setScore(Game.getScore()+1);
-//    }
 }
