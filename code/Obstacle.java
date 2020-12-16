@@ -1,11 +1,30 @@
 import javafx.scene.Group;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Obstacle extends GameElement
 {
     private double speed;
     private ArrayList<String> colors;
-    private Group obstacleGroup;
+    private transient Group obstacleGroup;
+    private String type;
+    private ArrayList<Double> coordinates;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public ArrayList<Double> getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(ArrayList<Double> coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public String getType() {
+        return type;
+    }
 
     public Obstacle(Group obstacleGroup)
     {
