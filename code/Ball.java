@@ -1,19 +1,29 @@
 import javafx.scene.shape.Circle;
 
+
 public class Ball extends GameElement
 {
     private String color;
     private boolean jumping;
     private transient Circle circle;
+    private double radius;
     public void jump()
     {
-        this.circle.setCenterY(circle.getCenterY()-50);
+        this.circle.setCenterY(circle.getCenterY()-40);
     };
 
     public Ball(Circle circle, String color)
     {
         this.circle = circle;
         this.color = color;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
     }
 
     public Circle getCircle() {
@@ -33,10 +43,10 @@ public class Ball extends GameElement
     }
 
     public boolean isJumping() {
-        return jumping;
+        return  jumping;
     }
 
-    public void setJumping(boolean jumping) {
-        this.jumping = jumping;
+    public void setJumping(boolean alive) {
+        this.jumping = alive;
     }
 }
