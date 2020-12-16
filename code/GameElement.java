@@ -1,16 +1,26 @@
-public class GameElement
+import java.io.Serializable;
+
+public class GameElement implements Serializable
 {
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private int height;
     private int width;
 
-    public int getY() {
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getY() {
         return y;
     }
 
-    public int getX() {
-        return x;
+    public void setY(double y) {
+        this.y = y;
     }
 
     public void rotate()
