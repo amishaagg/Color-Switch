@@ -1,18 +1,17 @@
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-
-import java.io.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import java.io.*;
 import java.util.ArrayList;
+
 
 public class MainMenu extends Application implements Serializable
 {
@@ -35,7 +34,8 @@ public class MainMenu extends Application implements Serializable
     {
         window.hide();
         try {
-            new Game(window);
+            Game game=new Game();
+            game.startGame(window);
         } catch (FileNotFoundException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
         } catch (IOException e) {
@@ -91,12 +91,22 @@ public class MainMenu extends Application implements Serializable
         ImageView imageViewNoMusic = new ImageView(new Image(new FileInputStream("assets/no_music.png")));
         btnMusic.setGraphic(imageViewMusic);
         btnMusic.setBackground(Background.EMPTY);
+
+        String musicFile = "staythenight.mp3";
+        Media sound = new Media(new File(musicFile).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        //mediaPlayer.setAutoPlay(true);
+        mediaPlayer.play();
         btnMusic.setOnAction(e->
         {
-            if(btnMusic.getGraphic().equals(imageViewMusic))
+            if(btnMusic.getGraphic().equals(imageViewMusic)){
+                mediaPlayer.pause();
                 btnMusic.setGraphic(imageViewNoMusic);
-            else
+            }
+            else {
+                mediaPlayer.play();
                 btnMusic.setGraphic(imageViewMusic);
+            }
         });
 
         Image image = new Image(new FileInputStream("assets/mainmenu.png"));
@@ -181,6 +191,15 @@ public class MainMenu extends Application implements Serializable
                 file.close();
                 System.out.println("Object has been deserialized ");
                 System.out.println("a = " + object1.getScore());
+                for(Obstacle obs:object1.getObstacles()){
+                    System.out.println(obs.getCoordinates());
+                }
+                System.out.println("Star X"+object1.getStars().get(0).getX());
+                System.out.println("Star Y"+object1.getStars().get(0).getY());
+                Game game=new Game();
+                game.savedGame(window,object1.getScore(),object1.getStars(),object1.getObstacles()
+                ,object1.getBall(),object1.getColorSwitchers(),object1.getMyfinger());
+
 
             }
             catch(IOException ex)
