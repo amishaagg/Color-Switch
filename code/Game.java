@@ -19,9 +19,9 @@ import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Game implements Serializable
@@ -33,6 +33,43 @@ public class Game implements Serializable
     private Ball ball;
     private int score;
     transient AnimationTimer timer;
+
+    public Finger getMyfinger() {
+        return myfinger;
+    }
+
+    public void setMyfinger(Finger myfinger) {
+        this.myfinger = myfinger;
+    }
+
+    //    private double finger_X;
+//    private double finger_Y;
+//    private boolean fingerimagevisible=true;
+    private Finger myfinger;
+
+//    public boolean isFingerimagevisible() {
+//        return fingerimagevisible;
+//    }
+//
+//    public void setFingerimagevisible(boolean fingerimagevisible) {
+//        this.fingerimagevisible = fingerimagevisible;
+//    }
+//
+//    public double getFinger_X() {
+//        return finger_X;
+//    }
+//
+//    public void setFinger_X(double finger_X) {
+//        this.finger_X = finger_X;
+//    }
+//
+//    public double getFinger_Y() {
+//        return finger_Y;
+//    }
+//
+//    public void setFinger_Y(double finger_Y) {
+//        this.finger_Y = finger_Y;
+//    }
 
     public ArrayList<GameElement> getGameElements() {
         return gameElements;
@@ -85,334 +122,8 @@ public class Game implements Serializable
     transient Button btnPause;
     transient Stage window;
     transient Scene scene1;
-    public Game(Stage primaryStage) throws IOException
-    {
-        window = new Stage();
-        Group layout = new Group();
-        scene1 = new Scene(layout);
-        window.setWidth(300);
-        window.setHeight(650);
-        btnPause = new Button();
-        Image pauseimage = new Image(new FileInputStream("assets/pause.png"));
-        ImageView pauseimageView = new ImageView(pauseimage);
-        pauseimageView.setX(5);
-        pauseimageView.setY(5);
-        pauseimageView.setFitHeight(40);
-        pauseimageView.setFitWidth(40);
-        btnPause.setGraphic(pauseimageView);
-        btnPause.setBackground(Background.EMPTY);
-        btnPause.setLayoutX(220);
-        btnPause.setLayoutY(10);
-        setScore(0); //oops
-        Text score_value = new Text(10.0, 30.0, getScore()+""); //oops
-        Font font = Font.font("Verdana", FontWeight.BOLD,  35);
-        score_value.setFont(font);
-        score_value.setLayoutY(10);
-        score_value.setFill(Color.WHITE);
-
-        ImageView starimageView = new ImageView(new Image(new FileInputStream("assets/star.png")));
-        starimageView.setId("star");
-        getStars().add(new Star(starimageView)); //oops
-        starimageView.setX(130.0f);
-        starimageView.setY(275.0f);
-        starimageView.setFitHeight(40);
-        starimageView.setFitWidth(40);
-        starimageView.setVisible(false);
-
-        ImageView starimageView2 = new ImageView(new Image(new FileInputStream("assets/star.png")));
-        starimageView2.setId("star");
-        getStars().add(new Star(starimageView2)); //oops
-        starimageView2.setX(130.0f);
-        starimageView2.setY(275.0f);
-        starimageView2.setFitHeight(40);
-        starimageView2.setFitWidth(40);
-
-        Rectangle rectangle=new Rectangle(75,220,130,20);
-        rectangle.setFill(Color.rgb(250,225,0));
-        rectangle.setId("yellow");
-        Rectangle rectangle2=new Rectangle(205,220,20,130);
-        rectangle2.setFill(Color.rgb(144,13,255));
-        rectangle2.setId("purple");
-        Rectangle rectangle3=new Rectangle(95,350,130,20);
-        rectangle3.setFill(Color.rgb(255,1,129));
-        rectangle3.setId("pink");
-        Rectangle rectangle4=new Rectangle(75,240,20,130);
-        rectangle4.setFill(Color.rgb(50,219,240));
-        rectangle4.setId("cyan");
-        Group obstaclegroup2=new Group(rectangle,rectangle2,rectangle3,rectangle4);
-        getObstacles().add(new Obstacle(obstaclegroup2)); //oops
-
-        Arc arc = new Arc(150.0,300.0,100.0,100.0,0.0,90.0);
-        arc.setType(ArcType.ROUND);
-
-        Arc arc2 = new Arc();
-        arc2.setCenterX(150.0f);
-        arc2.setCenterY(300.0f);
-        arc2.setRadiusX(100.0f);
-        arc2.setRadiusY(100.0f);
-        arc2.setStartAngle(90.0f);
-        arc2.setLength(90.0f);
-        arc2.setType(ArcType.ROUND);
-
-        Arc arc3 = new Arc();
-        arc3.setCenterX(150.0f);
-        arc3.setCenterY(300.0f);
-        arc3.setRadiusX(100.0f);
-        arc3.setRadiusY(100.0f);
-        arc3.setStartAngle(270.0f);
-        arc3.setLength(90.0f);
-        arc3.setType(ArcType.ROUND);
-
-        Arc arc4 = new Arc();
-        arc4.setCenterX(150.0f);
-        arc4.setCenterY(300.0f);
-        arc4.setRadiusX(100.0f);
-        arc4.setRadiusY(100.0f);
-        arc4.setStartAngle(180.0f);
-        arc4.setLength(90.0f);
-        arc4.setType(ArcType.ROUND);
-
-        Arc innerCircle = new Arc(150.0f,300.0f,80.0f,80.0f,0.0f,360.0f);
-        innerCircle.setType(ArcType.ROUND);
-
-        Circle circle = new Circle(150, 550, 10, Color.rgb(250,225,0));
-        ball = new Ball(circle, "yellow"); //oops
-
-        ImageView colorswitcher_imageView = new ImageView(new Image(new FileInputStream("assets/ColorSwitcher.png")));
-        getColorSwitchers().add(new ColorSwitcher(colorswitcher_imageView)); //oops
-        colorswitcher_imageView.setX(125);
-        colorswitcher_imageView.setY(110);
-
-        Shape shape1=Shape.subtract(arc,innerCircle);
-        shape1.setFill(Color.rgb(250,225,0));
-        shape1.setId("yellow");
-        Shape shape2=Shape.subtract(arc2,innerCircle);
-        shape2.setFill(Color.rgb(144, 13, 255));
-        shape2.setId("purple");
-        Shape shape3=Shape.subtract(arc3,innerCircle);
-        shape3.setFill(Color.rgb(255, 1, 129));
-        shape3.setId("pink");
-        Shape shape4=Shape.subtract(arc4,innerCircle);
-        shape4.setFill(Color.rgb(50, 219, 240));
-        shape4.setId("cyan");
-        Group obstaclegroup=new Group(shape1,shape2,shape3,shape4);
-        getObstacles().add(new Obstacle(obstaclegroup)); //oops
-
-        RotateTransition rotate = new RotateTransition();
-        rotate.setAxis(Rotate.Z_AXIS);
-        rotate.setByAngle(360);
-        rotate.setCycleCount(Animation.INDEFINITE);
-        rotate.setDuration(Duration.millis(5000));
-        rotate.setNode(obstaclegroup);
-        rotate.play();
-
-        RotateTransition rotate2 = new RotateTransition();
-        rotate2.setAxis(Rotate.Z_AXIS);
-        rotate2.setByAngle(360);
-        rotate2.setCycleCount(Animation.INDEFINITE);
-        rotate2.setDuration(Duration.millis(10000));
-        rotate2.setNode(obstaclegroup2);
-        rotate2.play();
-
-        ImageView fingerImageView = new ImageView(new Image(new FileInputStream("assets/finger.png")));
-        fingerImageView.setLayoutY(565);
-        fingerImageView.setLayoutX(135);
-
-        Text highScore_broken_text = new Text(10.0, 30.0, "NEW HIGH-SCORE!");
-        highScore_broken_text.setFont(Font.font("Verdana", FontWeight.BOLD,  20));
-        highScore_broken_text.setFill(Color.CADETBLUE);
-        highScore_broken_text.setVisible(false);
-        highScore_broken_text.setLayoutX(30);
-        highScore_broken_text.setLayoutY(570);
-
-        int Highest_score = 0;
-        try {
-            Scanner sc = new Scanner(new File("highscore.txt"));
-            Highest_score = Integer.parseInt(sc.next());
-        }
-        catch (FileNotFoundException e)
-        {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("highscore.txt"));
-            writer.write(0+"");
-            writer.close();
-        }
-        final double[] obstacle_position = {-400};
-        final int[] i = {0};
-        final int[] j = {0};
-        final double[] speed = {2};
-        final boolean[] highScorebroken = {false};
-        int finalHighest_score = Highest_score;
-        timer = new AnimationTimer()
-        {
-            @Override
-            public void handle(long l)
-            {
-                score_value.setText(getScore()+"");
-                if(getScore() > finalHighest_score && !highScorebroken[0])
-                {
-                    highScorebroken[0] = true;
-                    highScore_broken_text.setVisible(true);
-                    FadeTransition fadeTransition = new FadeTransition(Duration.millis(3000), highScore_broken_text);
-                    fadeTransition.setFromValue(10);
-                    fadeTransition.setToValue(0);
-                    fadeTransition.play();
-                }
-
-                if(fingerImageView.getBoundsInParent().getMinY()>=600)
-                    fingerImageView.setVisible(false);
-
-                for(Node shapey:obstaclegroup.getChildren())
-                {
-                    if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
-                    {
-                        Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
-                        if(intersect.getBoundsInParent().getWidth()>0)
-                        {
-                            try {
-                                timer.stop();
-                                gameOver(primaryStage, window);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-
-                for(Node shapey:obstaclegroup2.getChildren())
-                {
-                    if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
-                    {
-                        Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
-                        if(intersect.getBoundsInParent().getWidth()>0)
-                        {
-                            try {
-                                timer.stop();
-                                gameOver(primaryStage, window);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-
-                if(ball.getCircle().getCenterY()<550 && fingerImageView.isVisible())
-                {
-                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
-                }
-                if(!fingerImageView.isVisible())
-                {
-                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
-                    if(ball.getCircle().getBoundsInParent().getMinY()>=650)
-                    {
-                        try {
-                            timer.stop();
-                            gameOver(primaryStage, window);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }
-                if(ball.getCircle().getCenterY()<300)
-                {
-                    for(Star s: getStars())
-                    {
-                        if(ball.isJumping())
-                            s.getStarImageView().setLayoutY(s.getStarImageView().getLayoutY()+7);
-                    }
-
-                    if(ball.isJumping())
-                        fingerImageView.setLayoutY(fingerImageView.getLayoutY()+7);
-                    if(starimageView.getBoundsInParent().getMinY()>=650)
-                    {
-                        if(obstacle_position[0]<=-401)
-                            starimageView.setVisible(true);
-                        starimageView.setLayoutY(obstaclegroup.getLayoutY());
-                    }
-
-                    if(starimageView2.getBoundsInParent().getMinY()>=650)
-                    {
-                        starimageView2.setVisible(true);
-                        starimageView2.setLayoutY(obstaclegroup2.getLayoutY());
-                    }
-
-                    for(Obstacle obstacle: getObstacles())
-                    {
-                        if(ball.isJumping())
-                        {
-                            obstacle.getObstacleGroup().setLayoutY(obstacle.getObstacleGroup().getLayoutY() + 7);
-                        }
-                        if(obstacle.getObstacleGroup().getBoundsInParent().getMinY()>=650) {
-                            obstacle.getObstacleGroup().setLayoutY(obstacle_position[0]);
-                            obstacle_position[0] -= 1;
-                        }
-                    }
-
-                    for(ColorSwitcher c: getColorSwitchers())
-                    {
-                        if(ball.isJumping())
-                            c.getColorSwitcher().setLayoutY(c.getColorSwitcher().getLayoutY()+7);
-                        if(c.getColorSwitcher().getBoundsInParent().getMinY()>=650)
-                        {
-                            c.getColorSwitcher().setVisible(true);
-                            if(i[0]%2==0)
-                                c.getColorSwitcher().setLayoutY(obstaclegroup2.getLayoutY());
-                            else
-                                c.getColorSwitcher().setLayoutY(obstaclegroup2.getLayoutY()-50);
-                            if(i[0]%3==0)
-                                c.getColorSwitcher().setVisible(false);
-                            i[0]++;
-                        }
-                    }
-                }
-
-                for(Star s: getStars())
-                {
-                    if(s.getStarImageView().isVisible() && ball.getCircle().intersects(s.getStarImageView().getBoundsInParent()))
-                    {
-                        s.getStarImageView().setVisible(false);
-                        score++;
-                        score_value.setText(getScore()+"");
-                    }
-                }
-
-                if(colorswitcher_imageView.isVisible() &&
-                        ball.getCircle().intersects(colorswitcher_imageView.getBoundsInParent()))
-                {
-                    colorswitcher_imageView.setVisible(false);
-                    ColorSwitcher.changeColor(ball);
-                }
-            }
-        };
-        timer.start();
-        if(ball.getCircle().getCenterY()<550)
-            timer.stop();
-        scene1.setOnKeyPressed(e->
-        {
-            if(e.getCode()== KeyCode.Q)
-            {
-                ball.jump();
-                ball.setJumping(true);
-            }
-        });
-        scene1.setOnKeyReleased(e-> ball.setJumping(false));
-        //layout.getChildren().addAll(big_star,btnPause,score_value);
-        layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
-        layout.getChildren().addAll(score_value, starimageView, starimageView2,btnPause,fingerImageView);
-        layout.getChildren().addAll(highScore_broken_text);
-        obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
-        btnPause.setOnAction(e-> {
-            try {
-                timer.stop();
-                pause(window, primaryStage);
-            } catch (FileNotFoundException fileNotFoundException) {
-                fileNotFoundException.printStackTrace();
-            }
-        });
-        scene1.setFill(Color.rgb(40,40,40));
-        window.setScene(scene1);
-        window.show();
-    }
+    public Game() throws IOException
+    { }
 
     public void pause(Stage GameStage, Stage primaryStage) throws FileNotFoundException
     {
@@ -504,11 +215,6 @@ public class Game implements Serializable
         current_score.setFont(font);
         current_score.setFill(Color.WHITE);
 
-        ImageView not_enough_stars = new ImageView(new Image(new FileInputStream("assets/no_stars.png")));
-        not_enough_stars.setVisible(false);
-        not_enough_stars.setLayoutY(480);
-        not_enough_stars.setLayoutX(45);
-
         Scanner sc = new Scanner(new File("highscore.txt"));
         int Highest_score = Integer.parseInt(sc.next());
         if(getScore() > Highest_score)
@@ -528,7 +234,8 @@ public class Game implements Serializable
             //gameOverWindow.close();
             GameStage.close();
             try {
-                new Game(primaryStage);
+                new Game();
+                startGame(primaryStage);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -541,28 +248,13 @@ public class Game implements Serializable
         });
         continue_using_stars.setOnAction(e->
         {
-            if(getScore()>=5)
-            {
-                timer.start();
-                setScore(getScore()-5);
-                ball.setJumping(false);
-                if(ball.getCircle().getCenterY()>=650)
-                    ball.getCircle().setCenterY(550);
-                else
-                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + 50);
-                GameStage.setScene(scene1);
-            }
-            else
-            {
-                not_enough_stars.setVisible(true);
-                FadeTransition fadeTransition = new FadeTransition(Duration.millis(2000), not_enough_stars);
-                fadeTransition.setFromValue(10);
-                fadeTransition.setToValue(0);
-                fadeTransition.play();
-            }
+            timer.start();
+            //gameOverWindow.close();
+            ball.getCircle().setCenterY(ball.getCircle().getCenterY()+50);
+            GameStage.setScene(scene1);
         });
         group.getChildren().addAll(restart, home, continue_using_stars, scoreImageView, HighScoreImageView);
-        group.getChildren().addAll(current_score, high_score, not_enough_stars);
+        group.getChildren().addAll(current_score, high_score);
         restart.setLayoutX(105);
         restart.setLayoutY(330);
         continue_using_stars.setLayoutX(65);
@@ -584,4 +276,766 @@ public class Game implements Serializable
         GameStage.close();
         window.close();
     }
+
+
+
+    public void startGame(Stage primaryStage) throws IOException{
+        window = new Stage();
+        Group layout = new Group();
+        scene1 = new Scene(layout);
+        window.setWidth(300);
+        window.setHeight(650);
+        btnPause = new Button();
+        Image pauseimage = new Image(new FileInputStream("assets/pause.png"));
+        ImageView pauseimageView = new ImageView(pauseimage);
+        pauseimageView.setX(5);
+        pauseimageView.setY(5);
+        pauseimageView.setFitHeight(40);
+        pauseimageView.setFitWidth(40);
+        btnPause.setGraphic(pauseimageView);
+        btnPause.setBackground(Background.EMPTY);
+        btnPause.setLayoutX(220);
+        btnPause.setLayoutY(10);
+
+        setScore(0); //oops
+        Text score_value = new Text(10.0, 30.0, getScore()+""); //oops
+        Font font = Font.font("Verdana", FontWeight.BOLD,  35);
+        score_value.setFont(font);
+        score_value.setLayoutY(10);
+        score_value.setFill(Color.WHITE);
+
+        ImageView starimageView = new ImageView(new Image(new FileInputStream("assets/star.png")));
+        starimageView.setId("star");
+        starimageView.setX(130.0f);
+        starimageView.setY(275.0f);
+        starimageView.setFitHeight(40);
+        starimageView.setFitWidth(40);
+        starimageView.setVisible(false);
+        getStars().add(new Star(starimageView)); //oops
+
+
+        ImageView starimageView2 = new ImageView(new Image(new FileInputStream("assets/star.png")));
+        starimageView2.setId("star");
+        starimageView2.setX(130.0f);
+        starimageView2.setY(275.0f);
+        starimageView2.setFitHeight(40);
+        starimageView2.setFitWidth(40);
+        getStars().add(new Star(starimageView2)); //oops
+
+        Arc arc = new Arc(150.0,300.0,100.0,100.0,0.0,90.0);
+        arc.setType(ArcType.ROUND);
+        Arc arc2 = new Arc(150.0,300.0,100.0,100.0,90.0,90.0);
+        arc2.setType(ArcType.ROUND);
+        Arc arc3 = new Arc(150.0,300.0,100.0,100.0,270.0,90.0);
+//        arc3.setCenterX(150.0f);
+//        arc3.setCenterY(300.0f);
+//        arc3.setRadiusX(100.0f);
+//        arc3.setRadiusY(100.0f);
+//        arc3.setStartAngle(270.0f);
+//        arc3.setLength(90.0f);
+        arc3.setType(ArcType.ROUND);
+        Arc arc4 = new Arc(150.0,300.0,100.0,100.0,180.0,90.0);
+        arc4.setType(ArcType.ROUND);
+        Arc innerCircle = new Arc(150.0f,300.0f,80.0f,80.0f,0.0f,360.0f);
+        innerCircle.setType(ArcType.ROUND);
+        Shape shape1=Shape.subtract(arc,innerCircle);
+        shape1.setFill(Color.rgb(250,225,0));
+        shape1.setId("yellow");
+        Shape shape2=Shape.subtract(arc2,innerCircle);
+        shape2.setFill(Color.rgb(144, 13, 255));
+        shape2.setId("purple");
+        Shape shape3=Shape.subtract(arc3,innerCircle);
+        shape3.setFill(Color.rgb(255, 1, 129));
+        shape3.setId("pink");
+        Shape shape4=Shape.subtract(arc4,innerCircle);
+        shape4.setFill(Color.rgb(50, 219, 240));
+        shape4.setId("cyan");
+        Group obstaclegroup=new Group(shape1,shape2,shape3,shape4);
+        Obstacle obstacle=new Obstacle(obstaclegroup);
+        obstacle.setType("Circles");
+        ArrayList<ArrayList<Double>> obstaclecircle=new ArrayList<>();
+        getObstacles().add(obstacle);//oops
+
+        Rectangle rectangle=new Rectangle(75,220,130,20);
+        rectangle.setFill(Color.rgb(250,225,0));
+        rectangle.setId("yellow");
+        Rectangle rectangle2=new Rectangle(205,220,20,130);
+        rectangle2.setFill(Color.rgb(144,13,255));
+        rectangle2.setId("purple");
+        Rectangle rectangle3=new Rectangle(95,350,130,20);
+        rectangle3.setFill(Color.rgb(255,1,129));
+        rectangle3.setId("pink");
+        Rectangle rectangle4=new Rectangle(75,240,20,130);
+        rectangle4.setFill(Color.rgb(50,219,240));
+        rectangle4.setId("cyan");
+        Group obstaclegroup2=new Group(rectangle,rectangle2,rectangle3,rectangle4);
+        Obstacle obstacle2=new Obstacle(obstaclegroup2);
+        obstacle2.setType("Rectangles");
+        getObstacles().add(obstacle2); //oops
+
+
+
+        RotateTransition rotate = new RotateTransition();
+        rotate.setAxis(Rotate.Z_AXIS);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(Animation.INDEFINITE);
+        rotate.setDuration(Duration.millis(5000));
+        rotate.setNode(obstaclegroup);
+        rotate.play();
+
+        RotateTransition rotate2 = new RotateTransition();
+        rotate2.setAxis(Rotate.Z_AXIS);
+        rotate2.setByAngle(360);
+        rotate2.setCycleCount(Animation.INDEFINITE);
+        rotate2.setDuration(Duration.millis(10000));
+        rotate2.setNode(obstaclegroup2);
+        rotate2.play();
+
+        Circle circle = new Circle(150, 550, 10, Color.rgb(250,225,0));
+        ball = new Ball(circle, "yellow"); //oops
+
+        ImageView colorswitcher_imageView = new ImageView(new Image(new FileInputStream("assets/ColorSwitcher.png")));
+        getColorSwitchers().add(new ColorSwitcher(colorswitcher_imageView)); //oops
+        colorswitcher_imageView.setX(125);
+        colorswitcher_imageView.setY(110);
+
+
+        ImageView fingerImageView = new ImageView(new Image(new FileInputStream("assets/finger.png")));
+        fingerImageView.setLayoutY(565);
+        fingerImageView.setLayoutX(135);
+        myfinger=new Finger(fingerImageView);
+
+
+        Text highScore_broken_text = new Text(10.0, 30.0, "NEW HIGH-SCORE!");
+        highScore_broken_text.setFont(Font.font("Verdana", FontWeight.BOLD,  20));
+        highScore_broken_text.setFill(Color.CADETBLUE);
+        highScore_broken_text.setVisible(false);
+        highScore_broken_text.setLayoutX(30);
+        highScore_broken_text.setLayoutY(570);
+
+        int Highest_score = 0;
+        try {
+            Scanner sc = new Scanner(new File("highscore.txt"));
+            Highest_score = Integer.parseInt(sc.next());
+        }
+        catch (FileNotFoundException e)
+        {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("highscore.txt"));
+            writer.write(0+"");
+            writer.close();
+        }
+        final double[] obstacle_position = {-400};
+        final int[] i = {0};
+        final int[] j = {0};
+        final double[] speed = {2};
+        final boolean[] highScorebroken = {false};
+        int finalHighest_score = Highest_score;
+        timer = new AnimationTimer()
+        {
+            @Override
+            public void handle(long l)
+            {
+                score_value.setText(getScore()+"");
+                if(getScore() > finalHighest_score && !highScorebroken[0])
+                {
+                    highScorebroken[0] = true;
+                    highScore_broken_text.setVisible(true);
+                    FadeTransition fadeTransition = new FadeTransition(Duration.millis(3000), highScore_broken_text);
+                    fadeTransition.setFromValue(10);
+                    fadeTransition.setToValue(0);
+                    fadeTransition.play();
+                }
+
+                if(myfinger.getFingerImageView().getBoundsInParent().getMinY()>=600){
+                    myfinger.getFingerImageView().setVisible(false);
+
+                }
+
+                for(Node shapey:obstaclegroup.getChildren())
+                {
+                    if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
+                    {
+                        Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
+                        if(intersect.getBoundsInParent().getWidth()>0)
+                        {
+                            try {
+                                timer.stop();
+//                                rotate.pause();
+//                                rotate2.pause();
+                                gameOver(primaryStage, window);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
+                for(Node shapey:obstaclegroup2.getChildren())
+                {
+                    if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
+                    {
+                        Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
+                        if(intersect.getBoundsInParent().getWidth()>0)
+                        {
+                            try {
+                                timer.stop();
+                                gameOver(primaryStage, window);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
+                if(ball.getCircle().getCenterY()<550 && myfinger.getFingerImageView().isVisible())
+                {
+
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
+                }
+                if(!myfinger.getFingerImageView().isVisible())
+                {
+
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
+                    if(ball.getCircle().getBoundsInParent().getMinY()>=650)
+                    {
+                        try {
+                            timer.stop();
+                            gameOver(primaryStage, window);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+                if(ball.getCircle().getCenterY()<300)
+                {
+                    for(Star s: getStars())
+                    {
+                        if(ball.isJumping())
+                            s.getStarImageView().setLayoutY(s.getStarImageView().getLayoutY()+7);
+                    }
+
+                    if(ball.isJumping())
+                        myfinger.getFingerImageView().setLayoutY(myfinger.getFingerImageView().getLayoutY()+7);
+                    if(starimageView.getBoundsInParent().getMinY()>=650)
+                    {
+                        if(obstacle_position[0]<=-401)
+                            starimageView.setVisible(true);
+                        starimageView.setLayoutY(obstaclegroup.getLayoutY());
+                    }
+
+                    if(starimageView2.getBoundsInParent().getMinY()>=650)
+                    {
+                        starimageView2.setVisible(true);
+                        starimageView2.setLayoutY(obstaclegroup2.getLayoutY());
+                    }
+
+                    for(Obstacle obstacle: getObstacles())
+                    {
+                        if(ball.isJumping())
+                        {
+                            obstacle.getObstacleGroup().setLayoutY(obstacle.getObstacleGroup().getLayoutY() + 7);
+                        }
+                        if(obstacle.getObstacleGroup().getBoundsInParent().getMinY()>=650) {
+                            obstacle.getObstacleGroup().setLayoutY(obstacle_position[0]);
+                            obstacle_position[0] -= 1;
+                        }
+                    }
+
+                    for(ColorSwitcher c: getColorSwitchers())
+                    {
+                        if(ball.isJumping())
+                            c.getColorSwitcher().setLayoutY(c.getColorSwitcher().getLayoutY()+7);
+                        if(c.getColorSwitcher().getBoundsInParent().getMinY()>=650)
+                        {
+                            c.getColorSwitcher().setVisible(true);
+                            if(i[0]%2==0)
+                                c.getColorSwitcher().setLayoutY(obstaclegroup2.getLayoutY());
+                            else
+                                c.getColorSwitcher().setLayoutY(obstaclegroup2.getLayoutY()-50);
+                            if(i[0]%3==0)
+                                c.getColorSwitcher().setVisible(false);
+                            i[0]++;
+                        }
+                    }
+                }
+
+                for(Star s: getStars())
+                {
+                    if(s.getStarImageView().isVisible() && ball.getCircle().intersects(s.getStarImageView().getBoundsInParent()))
+                    {
+                        s.getStarImageView().setVisible(false);
+                        score++;
+                        score_value.setText(getScore()+"");
+                    }
+                }
+
+                if(colorswitcher_imageView.isVisible() &&
+                        ball.getCircle().intersects(colorswitcher_imageView.getBoundsInParent()))
+                {
+                    colorswitcher_imageView.setVisible(false);
+                    ColorSwitcher.changeColor(ball);
+                }
+            }
+        };
+        timer.start();
+        if(ball.getCircle().getCenterY()<550)
+            timer.stop();
+        scene1.setOnKeyPressed(e->
+        {
+            if(e.getCode()== KeyCode.Q)
+            {
+                ball.jump();
+                ball.setJumping(true);
+            }
+        });
+        scene1.setOnKeyReleased(e->ball.setJumping(false));
+        //layout.getChildren().addAll(big_star,btnPause,score_value);
+        layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
+        layout.getChildren().addAll(score_value, starimageView, starimageView2,btnPause,fingerImageView);
+        layout.getChildren().addAll(highScore_broken_text);
+        obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
+        btnPause.setOnAction(e-> {
+            try {
+//                finger_X=fingerImageView.getLayoutX();
+//                finger_Y=fingerImageView.getLayoutY();
+                myfinger.setVisible(myfinger.getFingerImageView().isVisible());
+                myfinger.setX(myfinger.getFingerImageView().getX());
+                myfinger.setY(myfinger.getFingerImageView().getY());
+                System.out.println("asshole");
+                for(Obstacle obs:getObstacles()) {
+                    Group obsGroup = obs.getObstacleGroup();
+                    for(Node shapey:obsGroup.getChildren()){
+                        System.out.println(shapey.getBoundsInParent());
+                    }
+
+                    ArrayList<Double> positions=new ArrayList<>();
+                    positions.add(obsGroup.getLayoutX());
+                    positions.add(obsGroup.getLayoutY());
+                    positions.add(obsGroup.getRotate());
+                    System.out.println("OBs group X= "+obsGroup.getLayoutX());
+                    System.out.println("OBs group Y= "+obsGroup.getLayoutY());
+                    obs.setCoordinates(positions);
+                }
+                for(ColorSwitcher c:getColorSwitchers()){
+                    ImageView img=c.getColorSwitcher();
+                    c.setX(img.getX());
+                    c.setY(img.getY());
+                    c.setVisible(img.isVisible());
+                }
+                for(Star s:getStars()){
+                    ImageView img=s.getStarImageView();
+                    s.setX(img.getX());
+                    s.setY(img.getY());
+                    s.setVisible(img.isVisible());
+                }
+                Circle circ=ball.getCircle();
+                ball.setX(circ.getCenterX());
+                ball.setY(circ.getCenterY());
+                ball.setRadius(circ.getRadius());
+                timer.stop();
+                pause(window, primaryStage);
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+        });
+        scene1.setFill(Color.rgb(40,40,40));
+        window.setScene(scene1);
+        window.show();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void savedGame(Stage primaryStage,int score2,ArrayList<Star> stars2,
+                          ArrayList<Obstacle> obstacles2,Ball ball2,
+                          ArrayList<ColorSwitcher> colorswitchers2,Finger finger2
+
+                          ) throws IOException {
+
+        myfinger=finger2;
+        window = new Stage();
+        Group layout = new Group();
+        scene1 = new Scene(layout);
+        window.setWidth(300);
+        window.setHeight(650);
+        btnPause = new Button();
+        Image pauseimage = new Image(new FileInputStream("assets/pause.png"));
+        ImageView pauseimageView = new ImageView(pauseimage);
+        pauseimageView.setX(5);
+        pauseimageView.setY(5);
+        pauseimageView.setFitHeight(40);
+        pauseimageView.setFitWidth(40);
+        btnPause.setGraphic(pauseimageView);
+        btnPause.setBackground(Background.EMPTY);
+        btnPause.setLayoutX(220);
+        btnPause.setLayoutY(10);
+
+        setScore(score2); //oops
+        Text score_value = new Text(10.0, 30.0, getScore() + ""); //oops
+        Font font = Font.font("Verdana", FontWeight.BOLD, 35);
+        score_value.setFont(font);
+        score_value.setLayoutY(10);
+        score_value.setFill(Color.WHITE);
+
+        this.stars=stars2;
+        ImageView starimageView = new ImageView(new Image(new FileInputStream("assets/star.png")));
+        starimageView.setId("star");
+        starimageView.setFitHeight(40);
+        starimageView.setFitWidth(40);
+        starimageView.setVisible(this.stars.get(0).isVisible());
+        starimageView.setX(this.stars.get(0).getX());
+        starimageView.setY(this.stars.get(0).getY());
+        this.stars.get(0).setStarImageView(starimageView);
+
+        ImageView starimageView2 = new ImageView(new Image(new FileInputStream("assets/star.png")));
+        starimageView2.setId("star");
+        starimageView2.setFitHeight(40);
+        starimageView2.setFitWidth(40);
+        starimageView2.setVisible(this.stars.get(1).isVisible());
+        starimageView2.setX(stars.get(1).getX());
+        starimageView2.setY(stars.get(1).getY());
+        this.stars.get(1).setStarImageView(starimageView2);
+
+        this.obstacles = obstacles2;
+        Rectangle rectangle = new Rectangle(75, 220, 130, 20);
+        rectangle.setFill(Color.rgb(250, 225, 0));
+        rectangle.setId("yellow");
+        Rectangle rectangle2 = new Rectangle(205, 220, 20, 130);
+        rectangle2.setFill(Color.rgb(144, 13, 255));
+        rectangle2.setId("purple");
+        Rectangle rectangle3 = new Rectangle(95, 350, 130, 20);
+        rectangle3.setFill(Color.rgb(255, 1, 129));
+        rectangle3.setId("pink");
+        Rectangle rectangle4 = new Rectangle(75, 240, 20, 130);
+        rectangle4.setFill(Color.rgb(50, 219, 240));
+        rectangle4.setId("cyan");
+        Group obstaclegroup2 = new Group(rectangle, rectangle2, rectangle3, rectangle4);
+        System.out.println(this.obstacles.get(1).getType());
+        double X=this.obstacles.get(1).getCoordinates().get(0);
+        double Y=this.obstacles.get(1).getCoordinates().get(1);
+        double Rotation=this.obstacles.get(1).getCoordinates().get(2);
+        obstaclegroup2.setLayoutX(X);
+        obstaclegroup2.setLayoutY(Y);
+        obstaclegroup2.setRotate(Rotation);
+        RotateTransition rotate2 = new RotateTransition();
+        rotate2.setAxis(Rotate.Z_AXIS);
+        rotate2.setByAngle(360);
+        rotate2.setCycleCount(Animation.INDEFINITE);
+        rotate2.setDuration(Duration.millis(5000));
+        rotate2.setNode(obstaclegroup2);
+        rotate2.play();
+        this.obstacles.get(1).setObstacleGroup(obstaclegroup2);
+
+        Arc arc = new Arc(150.0, 300.0, 100.0, 100.0, 0.0, 90.0);
+        arc.setType(ArcType.ROUND);
+        Arc arc2 = new Arc(150.0, 300.0, 100.0, 100.0, 90.0, 90.0);
+        arc2.setType(ArcType.ROUND);
+        Arc arc3 = new Arc(150.0, 300.0, 100.0, 100.0, 270.0, 90.0);
+//        arc3.setCenterX(150.0f);
+//        arc3.setCenterY(300.0f);
+//        arc3.setRadiusX(100.0f);
+//        arc3.setRadiusY(100.0f);
+//        arc3.setStartAngle(270.0f);
+//        arc3.setLength(90.0f);
+        arc3.setType(ArcType.ROUND);
+        Arc arc4 = new Arc(150.0, 300.0, 100.0, 100.0, 180.0, 90.0);
+        arc4.setType(ArcType.ROUND);
+        Arc innerCircle = new Arc(150.0f, 300.0f, 80.0f, 80.0f, 0.0f, 360.0f);
+        innerCircle.setType(ArcType.ROUND);
+        Shape shape1 = Shape.subtract(arc, innerCircle);
+        shape1.setFill(Color.rgb(250, 225, 0));
+        shape1.setId("yellow");
+        Shape shape2 = Shape.subtract(arc2, innerCircle);
+        shape2.setFill(Color.rgb(144, 13, 255));
+        shape2.setId("purple");
+        Shape shape3 = Shape.subtract(arc3, innerCircle);
+        shape3.setFill(Color.rgb(255, 1, 129));
+        shape3.setId("pink");
+        Shape shape4 = Shape.subtract(arc4, innerCircle);
+        shape4.setFill(Color.rgb(50, 219, 240));
+        shape4.setId("cyan");
+        Group obstaclegroup = new Group(shape1, shape2, shape3, shape4);
+        X=this.obstacles.get(0).getCoordinates().get(0);
+        Y=this.obstacles.get(0).getCoordinates().get(1);
+        Rotation=this.obstacles.get(0).getCoordinates().get(2);
+        obstaclegroup.setLayoutX(X);
+        obstaclegroup.setLayoutY(Y);
+        obstaclegroup.setRotate(Rotation);
+        RotateTransition rotate = new RotateTransition();
+        rotate.setAxis(Rotate.Z_AXIS);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(Animation.INDEFINITE);
+        rotate.setDuration(Duration.millis(5000));
+        rotate.setNode(obstaclegroup);
+        rotate.play();
+        this.obstacles.get(0).setObstacleGroup(obstaclegroup);
+
+
+        this.ball = ball2;
+        Circle circle = new Circle(ball.getX(), ball.getY(), ball.getRadius());
+        String color = ball.getColor();
+        if (color.equals("yellow")) {
+            circle.setFill(Color.rgb(250, 225, 0));
+        } else if (color.equals("purple")) {
+            circle.setFill(Color.rgb(144, 13, 255));
+        } else if (color.equals("pink")) {
+            circle.setFill(Color.rgb(255, 1, 129));
+        } else {
+            circle.setFill(Color.rgb(50, 219, 240));
+        }
+        this.ball.setCircle(circle);
+        ball.setJumping(ball2.isJumping());
+        System.out.println("ball is "+ ball.isJumping());
+
+
+        this.colorSwitchers=colorswitchers2;
+        ImageView colorswitcher_imageView = new ImageView(new Image(new FileInputStream("assets/ColorSwitcher.png")));
+        colorswitcher_imageView.setTranslateX(colorSwitchers.get(0).getX());
+        colorswitcher_imageView.setTranslateY(colorSwitchers.get(0).getY());
+        colorswitcher_imageView.setVisible(colorSwitchers.get(0).isVisible());
+        colorSwitchers.get(0).setColorSwitcher(colorswitcher_imageView);
+
+
+        ImageView fingerImageView = new ImageView(new Image(new FileInputStream("assets/finger.png")));
+        fingerImageView.setX(myfinger.getX());
+        fingerImageView.setY(myfinger.getY());
+        fingerImageView.setVisible(myfinger.isVisible());
+        myfinger.setFingerImageView(fingerImageView);
+
+        Text highScore_broken_text = new Text(10.0, 30.0, "NEW HIGH-SCORE!");
+        highScore_broken_text.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        highScore_broken_text.setFill(Color.CADETBLUE);
+        highScore_broken_text.setVisible(false);
+        highScore_broken_text.setLayoutX(30);
+        highScore_broken_text.setLayoutY(570);
+        int Highest_score = 0;
+        try {
+            Scanner sc = new Scanner(new File("highscore.txt"));
+            Highest_score = Integer.parseInt(sc.next());
+        }
+        catch (FileNotFoundException e)
+        {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("highscore.txt"));
+            writer.write(0+"");
+            writer.close();
+        }
+        final double[] obstacle_position = {-400};
+        final int[] i = {0};
+        final int[] j = {0};
+        final double[] speed = {2};
+        final boolean[] highScorebroken = {false};
+        int finalHighest_score = Highest_score;
+        timer = new AnimationTimer()
+        {
+            @Override
+            public void handle(long l)
+            {
+                score_value.setText(getScore()+"");
+                if(getScore() > finalHighest_score && !highScorebroken[0])
+                {
+                    highScorebroken[0] = true;
+                    highScore_broken_text.setVisible(true);
+                    FadeTransition fadeTransition = new FadeTransition(Duration.millis(3000), highScore_broken_text);
+                    fadeTransition.setFromValue(10);
+                    fadeTransition.setToValue(0);
+                    fadeTransition.play();
+                }
+
+                if(myfinger.getFingerImageView().getBoundsInParent().getMinY()>=600){
+                    myfinger.getFingerImageView().setVisible(false);
+
+                }
+
+
+                for(Node shapey:obstaclegroup.getChildren())
+                {
+                    if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
+                    {
+                        Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
+                        if(intersect.getBoundsInParent().getWidth()>0)
+                        {
+                            try {
+                                timer.stop();
+                                gameOver(primaryStage, window);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
+                for(Node shapey:obstaclegroup2.getChildren())
+                {
+                    if(!ball.getColor().equals(shapey.getId()) && !shapey.getId().equals("star"))
+                    {
+                        Shape intersect = Shape.intersect((Shape) shapey,ball.getCircle());
+                        if(intersect.getBoundsInParent().getWidth()>0)
+                        {
+                            try {
+                                timer.stop();
+                                gameOver(primaryStage, window);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
+                if(ball.getCircle().getCenterY()<550 && myfinger.getFingerImageView().isVisible())
+                {
+
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
+                }
+                if(!myfinger.getFingerImageView().isVisible())
+                {
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
+                    if(ball.getCircle().getBoundsInParent().getMinY()>=650)
+                    {
+                        try {
+                            timer.stop();
+                            gameOver(primaryStage, window);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+                if(ball.getCircle().getCenterY()<300)
+                {
+                    for(Star s: getStars())
+                    {
+                        if(ball.isJumping())
+                            s.getStarImageView().setLayoutY(s.getStarImageView().getLayoutY()+7);
+                    }
+
+                    if(ball.isJumping())
+                        fingerImageView.setLayoutY(fingerImageView.getLayoutY()+7);
+                    if(starimageView.getBoundsInParent().getMinY()>=650)
+                    {
+                        if(obstacle_position[0]<=-401)
+                            starimageView.setVisible(true);
+                        starimageView.setLayoutY(obstaclegroup.getLayoutY());
+                    }
+
+                    if(starimageView2.getBoundsInParent().getMinY()>=650)
+                    {
+                        starimageView2.setVisible(true);
+                        starimageView2.setLayoutY(obstaclegroup2.getLayoutY());
+                    }
+
+                    for(Obstacle obstacle: getObstacles())
+                    {
+                        if(ball.isJumping())
+                        {
+                            obstacle.getObstacleGroup().setLayoutY(obstacle.getObstacleGroup().getLayoutY() + 7);
+                        }
+                        if(obstacle.getObstacleGroup().getBoundsInParent().getMinY()>=650) {
+                            obstacle.getObstacleGroup().setLayoutY(obstacle_position[0]);
+                            obstacle_position[0] -= 1;
+                        }
+                    }
+
+                    for(ColorSwitcher c: getColorSwitchers())
+                    {
+                        if(ball.isJumping())
+                            c.getColorSwitcher().setLayoutY(c.getColorSwitcher().getLayoutY()+7);
+                        if(c.getColorSwitcher().getBoundsInParent().getMinY()>=650)
+                        {
+                            c.getColorSwitcher().setVisible(true);
+                            if(i[0]%2==0)
+                                c.getColorSwitcher().setLayoutY(obstaclegroup2.getLayoutY());
+                            else
+                                c.getColorSwitcher().setLayoutY(obstaclegroup2.getLayoutY()-50);
+                            if(i[0]%3==0)
+                                c.getColorSwitcher().setVisible(false);
+                            i[0]++;
+                        }
+                    }
+                }
+
+                for(Star s: getStars())
+                {
+                    if(s.getStarImageView().isVisible() && ball.getCircle().intersects(s.getStarImageView().getBoundsInParent()))
+                    {
+                        s.getStarImageView().setVisible(false);
+                        score++;
+                        score_value.setText(getScore()+"");
+                    }
+                }
+
+                if(colorswitcher_imageView.isVisible() &&
+                        ball.getCircle().intersects(colorswitcher_imageView.getBoundsInParent()))
+                {
+                    colorswitcher_imageView.setVisible(false);
+                    ColorSwitcher.changeColor(ball);
+                }
+
+            }
+
+        };
+        timer.start();
+        if(ball.getCircle().getCenterY()<550)
+            timer.stop();
+        scene1.setOnKeyPressed(e->
+        {
+            if(e.getCode()== KeyCode.Q)
+            {
+                ball.jump();
+                ball.setJumping(true);
+            }
+        });
+        scene1.setOnKeyReleased(e->ball.setJumping(false));
+        //layout.getChildren().addAll(big_star,btnPause,score_value);
+        layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
+        layout.getChildren().addAll(score_value, starimageView, starimageView2,btnPause,fingerImageView);
+        layout.getChildren().addAll(highScore_broken_text);
+        obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
+        btnPause.setOnAction(e-> {
+            try {
+                for(Obstacle obs:getObstacles()) {
+                    Group obsGroup = obs.getObstacleGroup();
+                    ArrayList<Double> positions=new ArrayList<>();
+                    positions.add(obsGroup.getLayoutX());
+                    positions.add(obsGroup.getLayoutY());
+                    positions.add(obsGroup.getRotate());
+                    obs.setCoordinates(positions);
+                }
+                for(ColorSwitcher c:getColorSwitchers()){
+                    ImageView img=c.getColorSwitcher();
+                    c.setX(img.getX());
+                    c.setY(img.getY());
+                }
+                for(Star s:getStars()){
+                    ImageView img=s.getStarImageView();
+                    s.setX(img.getX());
+                    s.setY(img.getY());
+                }
+                Circle circ=ball.getCircle();
+                ball.setX(circ.getCenterX());
+                ball.setY(circ.getCenterY());
+                ball.setRadius(circ.getRadius());
+                timer.stop();
+                pause(window, primaryStage);
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+        });
+        scene1.setFill(Color.rgb(40,40,40));
+        window.setScene(scene1);
+        window.show();
+    }
+
 }
