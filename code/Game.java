@@ -577,8 +577,9 @@ public class Game implements Serializable
                         rotate.setAxis(Rotate.Z_AXIS);
                         rotate.setByAngle(360);
                         rotate.setCycleCount(Animation.INDEFINITE);
-                        rotate.setDuration(Duration.millis(obstacle_speed-100));
-                        obstacle_speed -= 100;
+                        if(obstacle_speed>3000)
+                            obstacle_speed -= 100;
+                        rotate.setDuration(Duration.millis(obstacle_speed));
                         rotate.setNode(obstaclegroup);
                         rotate.play();
                     }
@@ -595,8 +596,9 @@ public class Game implements Serializable
                         rotate2.setAxis(Rotate.Z_AXIS);
                         rotate2.setByAngle(360);
                         rotate2.setCycleCount(Animation.INDEFINITE);
-                        rotate2.setDuration(Duration.millis(obstacle_speed-100));
-                        obstacle_speed -= 100;
+                        if(obstacle_speed>3000)
+                            obstacle_speed -= 100;
+                        rotate2.setDuration(Duration.millis(obstacle_speed));
                         rotate2.setNode(obstaclegroup2);
                         rotate2.play();
                     }
@@ -981,8 +983,9 @@ public class Game implements Serializable
                         rotate.setAxis(Rotate.Z_AXIS);
                         rotate.setByAngle(360);
                         rotate.setCycleCount(Animation.INDEFINITE);
-                        rotate.setDuration(Duration.millis(obstacle_speed-100));
-                        obstacle_speed -= 100;
+                        if(obstacle_speed>3000)
+                            obstacle_speed -= 100;
+                        rotate.setDuration(Duration.millis(obstacle_speed));
                         rotate.setNode(obstaclegroup);
                         rotate.play();
                     }
@@ -997,8 +1000,9 @@ public class Game implements Serializable
                         rotate2.setAxis(Rotate.Z_AXIS);
                         rotate2.setByAngle(360);
                         rotate2.setCycleCount(Animation.INDEFINITE);
-                        rotate2.setDuration(Duration.millis(obstacle_speed-100));
-                        obstacle_speed -= 100;
+                        if(obstacle_speed>3000)
+                            obstacle_speed -= 100;
+                        rotate2.setDuration(Duration.millis(obstacle_speed));
                         rotate2.setNode(obstaclegroup2);
                         rotate2.play();
                     }
