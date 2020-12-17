@@ -61,7 +61,7 @@ public class ColorSwitcher extends GameElement
             }
             else
             {
-                ball.getCircle().setFill(Color.rgb(144,13,225));
+                ball.getCircle().setFill(Color.rgb(144,13,255));
                 ball.setColor("purple");
             }
                 break;
