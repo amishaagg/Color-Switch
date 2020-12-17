@@ -131,26 +131,41 @@ public class Game implements Serializable
             fadeTransition.setToValue(0);
             fadeTransition.play();
 
-//            Scanner sc = null;
-//            try {
-//                sc = new Scanner(new File("count.txt"));
-//                int current_count = Integer.parseInt(sc.next());
-//                BufferedWriter writer = new BufferedWriter(new FileWriter("highscore.txt"));
-//            } catch (FileNotFoundException fileNotFoundException) {
-//                fileNotFoundException.printStackTrace();
-//            } catch (IOException ioException) {
-//                ioException.printStackTrace();
-//            }
+            int current_count = 0;
+            try {
+                Scanner sc = new Scanner(new File("count.txt"));
+                current_count = Integer.parseInt(sc.next());
+                BufferedWriter writer = new BufferedWriter(new FileWriter("count.txt"));
+                writer.write(current_count+1+"");
+                current_count++;
+                writer.close();
+            }
+            catch (FileNotFoundException fileNotFoundException)
+            {
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter("count.txt"));
+                    writer.write(0+"");
+                    writer.close();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
 
-
-            String filename="file.bin";
-            String filename2="file2.bin";
-            String filename3="file3.bin";
-            String filename4="file4.bin";
-            String filename5="file5.bin";
-            serialise(filename);
-
-
+            switch (current_count%5)
+            {
+                case 0: serialise("file.bin");
+                        break;
+                case 1: serialise("file1.bin");
+                        break;
+                case 2: serialise("file2.bin");
+                    break;
+                case 3: serialise("file3.bin");
+                    break;
+                case 4: serialise("file4.bin");
+                    break;
+            }
         });
         resume.setOnAction(e->
         {
@@ -375,7 +390,7 @@ public class Game implements Serializable
         rotate.setAxis(Rotate.Z_AXIS);
         rotate.setByAngle(360);
         rotate.setCycleCount(Animation.INDEFINITE);
-        rotate.setDuration(Duration.millis(5000));
+        rotate.setDuration(Duration.millis(3000));
         rotate.setNode(obstaclegroup);
         rotate.play();
 
@@ -383,7 +398,7 @@ public class Game implements Serializable
         rotate2.setAxis(Rotate.Z_AXIS);
         rotate2.setByAngle(360);
         rotate2.setCycleCount(Animation.INDEFINITE);
-        rotate2.setDuration(Duration.millis(10000));
+        rotate2.setDuration(Duration.millis(3000));
         rotate2.setNode(obstaclegroup2);
         rotate2.play();
 
@@ -519,8 +534,8 @@ public class Game implements Serializable
                         myfinger.getFingerImageView().setLayoutY(myfinger.getFingerImageView().getLayoutY()+7);
                     if(starimageView.getBoundsInParent().getMinY()>=650)
                     {
-//                        if(obstacle_position[0]<=-401)
-                            starimageView.setVisible(true);
+                        if(obstacle_position[0]<=-401)
+                        starimageView.setVisible(true);
                         starimageView.setLayoutY(obstaclegroup.getLayoutY());
                     }
 
@@ -640,27 +655,10 @@ public class Game implements Serializable
         window.show();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void savedGame(Stage primaryStage,int score2,ArrayList<Star> stars2,
                           ArrayList<Obstacle> obstacles2, Ball ball2,
-                          ArrayList<ColorSwitcher> colorswitchers2,Finger finger2
-
-                          ) throws IOException {
-
+                          ArrayList<ColorSwitcher> colorswitchers2,Finger finger2) throws IOException
+    {
         myfinger=finger2;
         window = new Stage();
         Group layout = new Group();
@@ -712,12 +710,6 @@ public class Game implements Serializable
         Arc arc2 = new Arc(150.0, 300.0, 100.0, 100.0, 90.0, 90.0);
         arc2.setType(ArcType.ROUND);
         Arc arc3 = new Arc(150.0, 300.0, 100.0, 100.0, 270.0, 90.0);
-//        arc3.setCenterX(150.0f);
-//        arc3.setCenterY(300.0f);
-//        arc3.setRadiusX(100.0f);
-//        arc3.setRadiusY(100.0f);
-//        arc3.setStartAngle(270.0f);
-//        arc3.setLength(90.0f);
         arc3.setType(ArcType.ROUND);
         Arc arc4 = new Arc(150.0, 300.0, 100.0, 100.0, 180.0, 90.0);
         arc4.setType(ArcType.ROUND);
@@ -909,12 +901,6 @@ public class Game implements Serializable
                 }
                 if(ball.getCircle().getCenterY()<300)
                 {
-//                    for(Star s: getStars())
-//                    {
-//                        if(ball.isJumping())
-//                            s.getStarImageView().setLayoutY(s.getStarImageView().getLayoutY()+7);
-//                    }
-
                     if(ball.isJumping())
                         starimageView.setLayoutY(starimageView.getLayoutY()+7);
 
@@ -988,9 +974,6 @@ public class Game implements Serializable
 
         };
         timer.start();
- //       System.out.println("ball circle"+ ball.getCircle().getCenterY());
-//        if(ball.getCircle().getCenterY()<550)
-//            timer.stop();
         scene1.setOnKeyPressed(e->
         {
             if(e.getCode()== KeyCode.Q)
@@ -1054,7 +1037,8 @@ public class Game implements Serializable
         window.setScene(scene1);
         window.show();
     }
-    public void serialise(String filename){
+    public void serialise(String filename)
+    {
         try{FileOutputStream file = new FileOutputStream(filename);
             ObjectOutputStream out = new ObjectOutputStream(file);
             out.writeObject(this);
@@ -1066,6 +1050,4 @@ public class Game implements Serializable
             ex.printStackTrace();
         }
     }
-
-
 }
