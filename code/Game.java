@@ -37,16 +37,11 @@ public class Game implements Serializable
     transient Button btnPause;
     transient Stage window;
     transient Scene scene1;
-    public Game() throws IOException
-    { }
+    public Game() throws IOException { }
 
-    public Finger getMyfinger() {
-        return myfinger;
-    }
+    public Finger getMyfinger() { return myfinger; }
 
-    public void setMyfinger(Finger myfinger) {
-        this.myfinger = myfinger;
-    }
+    public void setMyfinger(Finger myfinger) { this.myfinger = myfinger; }
 
     public ArrayList<GameElement> getGameElements() {
         return gameElements;
@@ -96,10 +91,11 @@ public class Game implements Serializable
         this.score = score;
     }
 
-
-    public void pause(Stage GameStage, Stage primaryStage) throws FileNotFoundException
+    public void pause(Stage GameStage, Stage primaryStage,RotateTransition rotate,RotateTransition rotate2) throws FileNotFoundException
     {
         Stage window=new Stage();
+        rotate.pause();
+        rotate2.pause();
         window.initModality(Modality.APPLICATION_MODAL);
         Group layout = new Group();
         window.setTitle("PAUSE");
@@ -148,6 +144,8 @@ public class Game implements Serializable
         });
         resume.setOnAction(e->
         {
+            rotate.play();
+            rotate2.play();
             timer.start();
             window.close();
         });
@@ -166,6 +164,7 @@ public class Game implements Serializable
 
     public void gameOver(Stage primaryStage, Stage GameStage) throws IOException
     {
+
         Group group = new Group();
         Scene scene = new Scene(group);
         Button restart = new Button();
@@ -186,7 +185,6 @@ public class Game implements Serializable
         Font font = Font.font("Verdana", FontWeight.NORMAL,  30);
         current_score.setFont(font);
         current_score.setFill(Color.WHITE);
-
         Scanner sc = new Scanner(new File("highscore.txt"));
         int Highest_score = Integer.parseInt(sc.next());
         if(getScore() > Highest_score)
@@ -220,6 +218,7 @@ public class Game implements Serializable
         });
         continue_using_stars.setOnAction(e->
         {
+
             timer.start();
             //gameOverWindow.close();
             ball.getCircle().setCenterY(ball.getCircle().getCenterY()+50);
@@ -242,14 +241,11 @@ public class Game implements Serializable
 //        gameOverWindow.show();
     }
 
-    public void exitToMainMenu(Stage primaryStage, Stage GameStage, Stage window)
-    {
+    public void exitToMainMenu(Stage primaryStage, Stage GameStage, Stage window) {
         primaryStage.show();
         GameStage.close();
         window.close();
     }
-
-
 
     public void startGame(Stage primaryStage) throws IOException{
         window = new Stage();
@@ -268,7 +264,6 @@ public class Game implements Serializable
         btnPause.setBackground(Background.EMPTY);
         btnPause.setLayoutX(220);
         btnPause.setLayoutY(10);
-
         setScore(0); //oops
         Text score_value = new Text(10.0, 30.0, getScore()+""); //oops
         Font font = Font.font("Verdana", FontWeight.BOLD,  35);
@@ -284,7 +279,6 @@ public class Game implements Serializable
         starimageView.setFitWidth(40);
         starimageView.setVisible(false);
         getStars().add(new Star(starimageView)); //oops
-
 
         ImageView starimageView2 = new ImageView(new Image(new FileInputStream("assets/star.png")));
         starimageView2.setId("star");
@@ -345,7 +339,6 @@ public class Game implements Serializable
         obstacle2.setType("Rectangles");
         getObstacles().add(obstacle2); //oops
 
-
         RotateTransition rotate = new RotateTransition();
         rotate.setAxis(Rotate.Z_AXIS);
         rotate.setByAngle(360);
@@ -377,14 +370,12 @@ public class Game implements Serializable
         System.out.println("Finger Y= "+fingerImageView.getLayoutY());
         myfinger=new Finger(fingerImageView);
 
-
         Text highScore_broken_text = new Text(10.0, 30.0, "NEW HIGH-SCORE!");
         highScore_broken_text.setFont(Font.font("Verdana", FontWeight.BOLD,  20));
         highScore_broken_text.setFill(Color.CADETBLUE);
         highScore_broken_text.setVisible(false);
         highScore_broken_text.setLayoutX(30);
         highScore_broken_text.setLayoutY(570);
-
         int Highest_score = 0;
         try {
             Scanner sc = new Scanner(new File("highscore.txt"));
@@ -616,7 +607,7 @@ public class Game implements Serializable
                 ball.setY(circ.getCenterY());
                 ball.setRadius(circ.getRadius());
                 timer.stop();
-                pause(window, primaryStage);
+                pause(window, primaryStage,rotate,rotate2);
             } catch (FileNotFoundException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
             }
@@ -1036,7 +1027,7 @@ public class Game implements Serializable
                 ball.setY(circ.getCenterY());
                 ball.setRadius(circ.getRadius());
                 timer.stop();
-                pause(window, primaryStage);
+                pause(window, primaryStage,rotate,rotate2);
             } catch (FileNotFoundException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
             }
