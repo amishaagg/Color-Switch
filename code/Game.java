@@ -37,6 +37,28 @@ public class Game implements Serializable
     transient Button btnPause;
     transient Stage window;
     transient Scene scene1;
+
+    transient double obstacle_position = -400;
+    transient int i = 0;
+    transient double speed = 2;
+    transient double obstacle_speed = 5000;
+
+    public double getObstacle_position() {
+        return obstacle_position;
+    }
+
+    public int getI() {
+        return i;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public double getObstacle_speed() {
+        return obstacle_speed;
+    }
+
     public Game() throws IOException { }
 
     public Finger getMyfinger() { return myfinger; }
@@ -175,7 +197,12 @@ public class Game implements Serializable
             window.close();
         });
         exit.setOnAction(e->exitToMainMenu(primaryStage, GameStage, window));
-        window.setOnCloseRequest(e-> timer.start() );
+        window.setOnCloseRequest(e->
+        {
+            rotate.play();
+            rotate2.play();
+            timer.start();
+        });
         resume.setLayoutX(65);
         resume.setLayoutY(150);
         save.setLayoutX(65);
@@ -434,10 +461,7 @@ public class Game implements Serializable
             writer.write(0+"");
             writer.close();
         }
-        final double[] obstacle_position = {-400};
-        final int[] i = {0};
-        final int[] j = {0};
-        final double[] speed = {2};
+
         final boolean[] highScorebroken = {false};
         int finalHighest_score = Highest_score;
         timer = new AnimationTimer()
@@ -500,12 +524,12 @@ public class Game implements Serializable
                 if(ball.getCircle().getCenterY()<550 && myfinger.getFingerImageView().isVisible())
                 {
 
-                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed);
                 }
                 if(!myfinger.getFingerImageView().isVisible())
                 {
 
-                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed);
                     if(ball.getCircle().getBoundsInParent().getMinY()>=650)
                     {
                         try {
@@ -519,11 +543,6 @@ public class Game implements Serializable
                 }
                 if(ball.getCircle().getCenterY()<300)
                 {
-                    for(Star s: getStars())
-                    {
-
-
-                    }
                     if(ball.isJumping())
                         starimageView.setLayoutY(starimageView.getLayoutY()+7);
 
@@ -534,7 +553,7 @@ public class Game implements Serializable
                         myfinger.getFingerImageView().setLayoutY(myfinger.getFingerImageView().getLayoutY()+7);
                     if(starimageView.getBoundsInParent().getMinY()>=650)
                     {
-                        if(obstacle_position[0]<=-401)
+                        if(obstacle_position<=-401)
                             starimageView.setVisible(true);
                         starimageView.setLayoutY(obstaclegroup.getLayoutY());
                     }
@@ -545,25 +564,41 @@ public class Game implements Serializable
                         starimageView2.setLayoutY(obstaclegroup2.getLayoutY());
                     }
 
-                    for(Obstacle obstacle: getObstacles())
-                    {
-
-                    }
                     if(ball.isJumping())
                     {
                         obstaclegroup.setLayoutY(obstaclegroup.getLayoutY() + 7);
                     }
                     if(obstaclegroup.getBoundsInParent().getMinY()>=650) {
-                        obstaclegroup.setLayoutY(obstacle_position[0]);
-                        obstacle_position[0] -= 1;
+                        obstaclegroup.setLayoutY(obstacle_position);
+                        obstacle_position -= 1;
+//                        if(rotate.getDuration().toMillis()>3000)
+//                            rotate.setDuration(Duration.millis(rotate.getDuration().toMillis()-100));
+                        RotateTransition rotate = new RotateTransition();
+                        rotate.setAxis(Rotate.Z_AXIS);
+                        rotate.setByAngle(360);
+                        rotate.setCycleCount(Animation.INDEFINITE);
+                        rotate.setDuration(Duration.millis(obstacle_speed-100));
+                        obstacle_speed -= 100;
+                        rotate.setNode(obstaclegroup);
+                        rotate.play();
                     }
                     if(ball.isJumping())
                     {
                         obstaclegroup2.setLayoutY(obstaclegroup2.getLayoutY() + 7);
                     }
                     if(obstaclegroup2.getBoundsInParent().getMinY()>=650) {
-                        obstaclegroup2.setLayoutY(obstacle_position[0]);
-                        obstacle_position[0] -= 1;
+                        obstaclegroup2.setLayoutY(obstacle_position);
+                        obstacle_position -= 1;
+//                        if(rotate2.getDuration().toMillis()>3000)
+//                            rotate2.setDuration(Duration.millis(rotate2.getDuration().toMillis()-100));
+                        RotateTransition rotate2 = new RotateTransition();
+                        rotate2.setAxis(Rotate.Z_AXIS);
+                        rotate2.setByAngle(360);
+                        rotate2.setCycleCount(Animation.INDEFINITE);
+                        rotate2.setDuration(Duration.millis(obstacle_speed-100));
+                        obstacle_speed -= 100;
+                        rotate2.setNode(obstaclegroup2);
+                        rotate2.play();
                     }
 
                     if(ball.isJumping())
@@ -571,19 +606,16 @@ public class Game implements Serializable
                     if(colorswitcher_imageView.getBoundsInParent().getMinY()>=650)
                     {
                         colorswitcher_imageView.setVisible(true);
-                        if(i[0]%2==0)
+                        if(i%2==0)
                             colorswitcher_imageView.setLayoutY(obstaclegroup2.getLayoutY());
                         else
                             colorswitcher_imageView.setLayoutY(obstaclegroup2.getLayoutY()-50);
-                        if(i[0]%3==0)
+                        if(i%3==0)
                             colorswitcher_imageView.setVisible(false);
-                        i[0]++;
+                        i++;
                     }
                 }
 
-                for(Star s: getStars()){
-
-                }
                 if(starimageView.isVisible() && ball.getCircle().intersects(starimageView.getBoundsInParent()))
                 {
                     starimageView.setVisible(false);
@@ -672,6 +704,10 @@ public class Game implements Serializable
                           ArrayList<Obstacle> obstacles2, Ball ball2,
                           ArrayList<ColorSwitcher> colorswitchers2,Finger finger2) throws IOException
     {
+//        this.obstacle_position = obstacle_position2;
+//        this.i = i2;
+//        this.speed = speed2;
+//        this.obstacle_speed = obstacle_speed2;
         myfinger=finger2;
         window = new Stage();
         Group layout = new Group();
@@ -831,10 +867,7 @@ public class Game implements Serializable
             writer.write(0+"");
             writer.close();
         }
-        final double[] obstacle_position = {-400};
-        final int[] i = {0};
-        final int[] j = {0};
-        final double[] speed = {2};
+
         final boolean[] highScorebroken = {false};
         int finalHighest_score = Highest_score;
         timer = new AnimationTimer()
@@ -896,11 +929,11 @@ public class Game implements Serializable
                 if(ball.getCircle().getCenterY()<550 && myfinger.getFingerImageView().isVisible())
                 {
 
-                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed);
                 }
                 if(!myfinger.getFingerImageView().isVisible())
                 {
-                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed[0]);
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + speed);
                     if(ball.getCircle().getBoundsInParent().getMinY()>=650)
                     {
                         try {
@@ -925,7 +958,7 @@ public class Game implements Serializable
                         myfinger.getFingerImageView().setLayoutY(myfinger.getFingerImageView().getLayoutY()+7);
                     if(starimageView.getBoundsInParent().getMinY()>=650)
                     {
-                        if(obstacle_position[0]<=-401)
+                        if(obstacle_position<=-401)
                             starimageView.setVisible(true);
                         starimageView.setLayoutY(obstaclegroup.getLayoutY());
                     }
@@ -937,21 +970,37 @@ public class Game implements Serializable
                     }
 
 
-                        if(ball.isJumping())
-                        {
-                            obstaclegroup.setLayoutY(obstaclegroup.getLayoutY() + 7);
-                        }
-                        if(obstaclegroup.getBoundsInParent().getMinY()>=650) {
-                            obstaclegroup.setLayoutY(obstacle_position[0]);
-                            obstacle_position[0] -= 1;
-                        }
+                    if(ball.isJumping())
+                    {
+                        obstaclegroup.setLayoutY(obstaclegroup.getLayoutY() + 7);
+                    }
+                    if(obstaclegroup.getBoundsInParent().getMinY()>=650) {
+                        obstaclegroup.setLayoutY(obstacle_position);
+                        obstacle_position -= 1;
+                        RotateTransition rotate = new RotateTransition();
+                        rotate.setAxis(Rotate.Z_AXIS);
+                        rotate.setByAngle(360);
+                        rotate.setCycleCount(Animation.INDEFINITE);
+                        rotate.setDuration(Duration.millis(obstacle_speed-100));
+                        obstacle_speed -= 100;
+                        rotate.setNode(obstaclegroup);
+                        rotate.play();
+                    }
                     if(ball.isJumping())
                     {
                         obstaclegroup2.setLayoutY(obstaclegroup2.getLayoutY() + 7);
                     }
                     if(obstaclegroup2.getBoundsInParent().getMinY()>=650) {
-                        obstaclegroup2.setLayoutY(obstacle_position[0]);
-                        obstacle_position[0] -= 1;
+                        obstaclegroup2.setLayoutY(obstacle_position);
+                        obstacle_position -= 1;
+                        RotateTransition rotate2 = new RotateTransition();
+                        rotate2.setAxis(Rotate.Z_AXIS);
+                        rotate2.setByAngle(360);
+                        rotate2.setCycleCount(Animation.INDEFINITE);
+                        rotate2.setDuration(Duration.millis(obstacle_speed-100));
+                        obstacle_speed -= 100;
+                        rotate2.setNode(obstaclegroup2);
+                        rotate2.play();
                     }
 
                     if(ball.isJumping())
@@ -959,23 +1008,23 @@ public class Game implements Serializable
                     if(colorswitcher_imageView.getBoundsInParent().getMinY()>=650)
                     {
                         colorswitcher_imageView.setVisible(true);
-                        if(i[0]%2==0)
+                        if(i%2==0)
                             colorswitcher_imageView.setLayoutY(obstaclegroup2.getLayoutY());
                         else
                             colorswitcher_imageView.setLayoutY(obstaclegroup2.getLayoutY()-50);
-                        if(i[0]%3==0)
+                        if(i%3==0)
                             colorswitcher_imageView.setVisible(false);
-                        i[0]++;
+                        i++;
                     }
                 }
 
 
-                    if(starimageView.isVisible() && ball.getCircle().intersects(starimageView.getBoundsInParent()))
-                    {
-                        starimageView.setVisible(false);
-                        score++;
-                        score_value.setText(getScore()+"");
-                    }
+                if(starimageView.isVisible() && ball.getCircle().intersects(starimageView.getBoundsInParent()))
+                {
+                    starimageView.setVisible(false);
+                    score++;
+                    score_value.setText(getScore()+"");
+                }
                 if(starimageView2.isVisible() && ball.getCircle().intersects(starimageView2.getBoundsInParent()))
                 {
                     starimageView2.setVisible(false);
