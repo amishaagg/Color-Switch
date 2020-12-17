@@ -19,7 +19,11 @@ import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.awt.*;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class MainMenu extends Application implements Serializable
@@ -138,7 +142,7 @@ public class MainMenu extends Application implements Serializable
         btnMusic.setGraphic(imageViewMusic);
         btnMusic.setBackground(Background.EMPTY);
 
-        String musicFile = "music/background_theme.mp3";
+        String musicFile = "background_theme.mp3";
         Media sound = new Media(new File(musicFile).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         //mediaPlayer.setAutoPlay(true);
@@ -212,7 +216,52 @@ public class MainMenu extends Application implements Serializable
         Group group = new Group();
         Scene scene = new Scene(group);
         ImageView imageView = new ImageView(new Image(new FileInputStream("assets/DeveloperImg.png")));
-        group.getChildren().add(imageView);
+        Button btn=new Button("amisha19016@iiitd.ac.in");
+        btn.setLayoutY(235);
+        btn.setLayoutX(75);
+        btn.setOnAction(e->{
+            if (Desktop.isDesktopSupported()) {
+                Desktop desktop = Desktop.getDesktop();
+                if (desktop.isSupported(Desktop.Action.MAIL)) {
+                    URI mailto = null;
+                    try {
+                        mailto = new URI("mailto:amisha19016@iiitd.ac.in?subject=Hello%20World");
+                    } catch (URISyntaxException uriSyntaxException) {
+                        uriSyntaxException.printStackTrace();
+                    }
+                    try {
+                        desktop.mail(mailto);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+            }
+
+        });
+        Button btn1=new Button("yash19130@iiitd.ac.in");
+        btn1.setLayoutY(400);
+        btn1.setLayoutX(78);
+
+        btn1.setOnAction(e->{
+            if (Desktop.isDesktopSupported()) {
+                Desktop desktop = Desktop.getDesktop();
+                if (desktop.isSupported(Desktop.Action.MAIL)) {
+                    URI mailto = null;
+                    try {
+                        mailto = new URI("mailto:yash19130@iiitd.ac.in?subject=Hello%20World");
+                    } catch (URISyntaxException uriSyntaxException) {
+                        uriSyntaxException.printStackTrace();
+                    }
+                    try {
+                        desktop.mail(mailto);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+            }
+
+        });
+        group.getChildren().addAll(imageView,btn,btn1);
         stage.setScene(scene);
         stage.setHeight(500);
         stage.setWidth(300);
@@ -389,13 +438,7 @@ public class MainMenu extends Application implements Serializable
             object1 = (Game)in.readObject();
             in.close();
             file.close();
-            System.out.println("Object has been deserialized ");
-            System.out.println("a = " + object1.getScore());
-            for(Obstacle obs:object1.getObstacles()){
-                System.out.println(obs.getCoordinates());
-            }
-            System.out.println("Star X"+object1.getStars().get(0).getX());
-            System.out.println("Star Y"+object1.getStars().get(0).getY());
+            
             Game game=new Game();
             game.savedGame(window,object1.getScore(),object1.getStars(),object1.getObstacles()
                     ,object1.getBall(),object1.getColorSwitchers(),object1.getMyfinger()
