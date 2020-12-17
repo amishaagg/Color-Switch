@@ -131,16 +131,16 @@ public class Game implements Serializable
             fadeTransition.setToValue(0);
             fadeTransition.play();
 
-            Scanner sc = null;
-            try {
-                sc = new Scanner(new File("count.txt"));
-                int current_count = Integer.parseInt(sc.next());
-                BufferedWriter writer = new BufferedWriter(new FileWriter("highscore.txt"));
-            } catch (FileNotFoundException fileNotFoundException) {
-                fileNotFoundException.printStackTrace();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+//            Scanner sc = null;
+//            try {
+//                sc = new Scanner(new File("count.txt"));
+//                int current_count = Integer.parseInt(sc.next());
+//                BufferedWriter writer = new BufferedWriter(new FileWriter("highscore.txt"));
+//            } catch (FileNotFoundException fileNotFoundException) {
+//                fileNotFoundException.printStackTrace();
+//            } catch (IOException ioException) {
+//                ioException.printStackTrace();
+//            }
 
 
             String filename="file.bin";
@@ -148,6 +148,7 @@ public class Game implements Serializable
             String filename3="file3.bin";
             String filename4="file4.bin";
             String filename5="file5.bin";
+            serialise(filename);
 
 
         });
@@ -987,8 +988,9 @@ public class Game implements Serializable
 
         };
         timer.start();
-        if(ball.getCircle().getCenterY()<550)
-            timer.stop();
+ //       System.out.println("ball circle"+ ball.getCircle().getCenterY());
+//        if(ball.getCircle().getCenterY()<550)
+//            timer.stop();
         scene1.setOnKeyPressed(e->
         {
             if(e.getCode()== KeyCode.Q)
