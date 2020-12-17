@@ -130,17 +130,18 @@ public class Game implements Serializable
             fadeTransition.setFromValue(10);
             fadeTransition.setToValue(0);
             fadeTransition.play();
+
+            Scanner sc = new Scanner(new File("count.txt"));
+            int current_count = Integer.parseInt(sc.next());
+            BufferedWriter writer = new BufferedWriter(new FileWriter("highscore.txt"));
+
             String filename="file.bin";
-            try{FileOutputStream file = new FileOutputStream(filename);
-                ObjectOutputStream out = new ObjectOutputStream(file);
-                out.writeObject(this);
-                out.close();
-                file.close();
-                System.out.println("Object has been serialized");
-            }
-            catch(IOException ex){
-                ex.printStackTrace();
-            }
+            String filename2="file2.bin";
+            String filename3="file3.bin";
+            String filename4="file4.bin";
+            String filename5="file5.bin";
+
+
         });
         resume.setOnAction(e->
         {
@@ -487,7 +488,7 @@ public class Game implements Serializable
                         myfinger.getFingerImageView().setLayoutY(myfinger.getFingerImageView().getLayoutY()+7);
                     if(starimageView.getBoundsInParent().getMinY()>=650)
                     {
-                        if(obstacle_position[0]<=-401)
+//                        if(obstacle_position[0]<=-401)
                             starimageView.setVisible(true);
                         starimageView.setLayoutY(obstaclegroup.getLayoutY());
                     }
@@ -528,8 +529,7 @@ public class Game implements Serializable
                     }
                 }
 
-                for(Star s: getStars())
-                {
+                for(Star s: getStars()){
                     if(s.getStarImageView().isVisible() && ball.getCircle().intersects(s.getStarImageView().getBoundsInParent()))
                     {
                         s.getStarImageView().setVisible(false);
@@ -538,9 +538,7 @@ public class Game implements Serializable
                     }
                 }
 
-                if(colorswitcher_imageView.isVisible() &&
-                        ball.getCircle().intersects(colorswitcher_imageView.getBoundsInParent()))
-                {
+                if(colorswitcher_imageView.isVisible() && ball.getCircle().intersects(colorswitcher_imageView.getBoundsInParent())){
                     colorswitcher_imageView.setVisible(false);
                     ColorSwitcher.changeColor(ball);
                 }
@@ -558,7 +556,6 @@ public class Game implements Serializable
             }
         });
         scene1.setOnKeyReleased(e->ball.setJumping(false));
-        //layout.getChildren().addAll(big_star,btnPause,score_value);
         layout.getChildren().addAll(obstaclegroup,obstaclegroup2,circle,colorswitcher_imageView);
         layout.getChildren().addAll(score_value, starimageView, starimageView2,btnPause,fingerImageView);
         layout.getChildren().addAll(highScore_broken_text);
@@ -586,9 +583,6 @@ public class Game implements Serializable
                 getColorSwitchers().get(0).setX(img.getX());
                 getColorSwitchers().get(0).setY(img.getY());
                 getColorSwitchers().get(0).setVisible(img.isVisible());
-                for(ColorSwitcher c:getColorSwitchers()){
-
-                }
 
                 img=starimageView;
                 getStars().get(0).setX(img.getX());
@@ -599,9 +593,7 @@ public class Game implements Serializable
                 getStars().get(1).setX(img2.getX());
                 getStars().get(1).setY(img2.getY());
                 getStars().get(1).setVisible(img2.isVisible());
-                for(Star s:getStars()){
 
-                }
                 Circle circ=ball.getCircle();
                 ball.setX(circ.getCenterX());
                 ball.setY(circ.getCenterY());
@@ -757,7 +749,6 @@ public class Game implements Serializable
         rotate2.play();
         this.obstacles.get(1).setObstacleGroup(obstaclegroup2);
 
-
         this.ball = ball2;
         Circle circle = new Circle(ball.getX(), ball.getY(), ball.getRadius());
         String color = ball.getColor();
@@ -771,9 +762,8 @@ public class Game implements Serializable
             circle.setFill(Color.rgb(50, 219, 240));
         }
         this.ball.setCircle(circle);
-        ball.setJumping(ball2.isJumping());
+        ball.setJumping(false);
         System.out.println("ball is "+ ball.isJumping());
-
 
         this.colorSwitchers=colorswitchers2;
         ImageView colorswitcher_imageView = new ImageView(new Image(new FileInputStream("assets/ColorSwitcher.png")));
@@ -781,7 +771,6 @@ public class Game implements Serializable
         colorswitcher_imageView.setY(colorSwitchers.get(0).getY());
         colorswitcher_imageView.setVisible(colorSwitchers.get(0).isVisible());
         colorSwitchers.get(0).setColorSwitcher(colorswitcher_imageView);
-
 
         ImageView fingerImageView = new ImageView(new Image(new FileInputStream("assets/finger.png")));
         fingerImageView.setLayoutX(finger2.getX());
@@ -1006,18 +995,13 @@ public class Game implements Serializable
                 System.out.println("OBs group2 Y= "+obstaclegroup2.getLayoutY());
                 getObstacles().get(1).setCoordinates(positions);
 
+                ImageView img=colorswitcher_imageView;
+                getColorSwitchers().get(0).setX(img.getX());
+                getColorSwitchers().get(0).setY(img.getY());
+                getColorSwitchers().get(0).setVisible(img.isVisible());
 
-                for(Obstacle obs:getObstacles()) {
-
-                }
-                for(ColorSwitcher c:getColorSwitchers()){
-                    ImageView img=c.getColorSwitcher();
-                    c.setX(img.getX());
-                    c.setY(img.getY());
-                    c.setVisible(img.isVisible());
-                }
                 for(Star s:getStars()){
-                    ImageView img=s.getStarImageView();
+                    img=s.getStarImageView();
                     s.setX(img.getX());
                     s.setY(img.getY());
                     s.setVisible(img.isVisible());
@@ -1036,5 +1020,18 @@ public class Game implements Serializable
         window.setScene(scene1);
         window.show();
     }
+    public void serialise(String filename){
+        try{FileOutputStream file = new FileOutputStream(filename);
+            ObjectOutputStream out = new ObjectOutputStream(file);
+            out.writeObject(this);
+            out.close();
+            file.close();
+            System.out.println("Object has been serialized");
+        }
+        catch(IOException ex){
+            ex.printStackTrace();
+        }
+    }
+
 
 }
