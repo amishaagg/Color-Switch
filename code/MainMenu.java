@@ -179,59 +179,20 @@ public class MainMenu extends Application implements Serializable
         game5.setLayoutX(-10);
         game5.setLayoutY(290);
         game1.setOnAction(e->{
-            Game object1 = null;
-            String filename="file.bin";
-            try{
-                // Reading the object from a file
-                FileInputStream file = new FileInputStream(filename);
-                ObjectInputStream in = new ObjectInputStream(file);
-                // Method for deserialization of object
-                object1 = (Game)in.readObject();
-                in.close();
-                file.close();
-                System.out.println("Object has been deserialized ");
-                System.out.println("a = " + object1.getScore());
-                for(Obstacle obs:object1.getObstacles()){
-                    System.out.println(obs.getCoordinates());
-                }
-                System.out.println("Star X"+object1.getStars().get(0).getX());
-                System.out.println("Star Y"+object1.getStars().get(0).getY());
-                Game game=new Game();
-                game.savedGame(window,object1.getScore(),object1.getStars(),object1.getObstacles()
-                ,object1.getBall(),object1.getColorSwitchers(),object1.getMyfinger());
-
-
-            }
-            catch(IOException ex)
-            {
-                System.out.println("IOException is caught");
-            }
-            catch(ClassNotFoundException ex)
-            {
-                System.out.println("ClassNotFoundException is caught");
-            }
-
+            deserialise("file.bin");
         });
-//        game2.setOnAction(e->{
-//            stage.close();
-//            Game.setScore(9);
-//            newGame(window);
-//        });
-//        game3.setOnAction(e->{
-//            stage.close();
-//            Game.setScore(10);
-//            newGame(window);
-//        });
-//        game4.setOnAction(e->{
-//            stage.close();
-//            Game.setScore(15);
-//            newGame(window);
-//        });
-//        game5.setOnAction(e->{
-//            stage.close();
-//            Game.setScore(5);
-//            newGame(window);
-//        });
+        game2.setOnAction(e->{
+            deserialise("file2.bin");
+        });
+        game3.setOnAction(e->{
+            deserialise("file3.bin");
+        });
+        game4.setOnAction(e->{
+            deserialise("file4.bin");
+        });
+        game5.setOnAction(e->{
+            deserialise("file5.bin");
+        });
         Group layout2=new Group();
         layout2.getChildren().addAll(imageViewChoose, btnreturn);
         layout2.getChildren().addAll(game1, game2, game3, game4, game5);
@@ -251,4 +212,39 @@ public class MainMenu extends Application implements Serializable
     public static void main(String[] args) {
         launch(args);
     }
+    public void deserialise(String filename){
+        Game object1 = null;
+        //String filename="file.bin";
+        try{
+            // Reading the object from a file
+            FileInputStream file = new FileInputStream(filename);
+            ObjectInputStream in = new ObjectInputStream(file);
+            // Method for deserialization of object
+            object1 = (Game)in.readObject();
+            in.close();
+            file.close();
+            System.out.println("Object has been deserialized ");
+            System.out.println("a = " + object1.getScore());
+            for(Obstacle obs:object1.getObstacles()){
+                System.out.println(obs.getCoordinates());
+            }
+            System.out.println("Star X"+object1.getStars().get(0).getX());
+            System.out.println("Star Y"+object1.getStars().get(0).getY());
+            Game game=new Game();
+            game.savedGame(window,object1.getScore(),object1.getStars(),object1.getObstacles()
+                    ,object1.getBall(),object1.getColorSwitchers(),object1.getMyfinger());
+
+
+        }
+        catch(IOException ex)
+        {
+            System.out.println("IOException is caught");
+        }
+        catch(ClassNotFoundException ex)
+        {
+            System.out.println("ClassNotFoundException is caught");
+        }
+
+    }
+
 }
