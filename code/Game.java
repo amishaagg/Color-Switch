@@ -156,9 +156,9 @@ public class Game implements Serializable
             switch (current_count%5)
             {
                 case 0: serialise("file.bin");
-                        break;
+                    break;
                 case 1: serialise("file1.bin");
-                        break;
+                    break;
                 case 2: serialise("file2.bin");
                     break;
                 case 3: serialise("file3.bin");
@@ -390,7 +390,7 @@ public class Game implements Serializable
         rotate.setAxis(Rotate.Z_AXIS);
         rotate.setByAngle(360);
         rotate.setCycleCount(Animation.INDEFINITE);
-        rotate.setDuration(Duration.millis(3000));
+        rotate.setDuration(Duration.millis(5000));
         rotate.setNode(obstaclegroup);
         rotate.play();
 
@@ -398,7 +398,7 @@ public class Game implements Serializable
         rotate2.setAxis(Rotate.Z_AXIS);
         rotate2.setByAngle(360);
         rotate2.setCycleCount(Animation.INDEFINITE);
-        rotate2.setDuration(Duration.millis(3000));
+        rotate2.setDuration(Duration.millis(5000));
         rotate2.setNode(obstaclegroup2);
         rotate2.play();
 
@@ -535,7 +535,7 @@ public class Game implements Serializable
                     if(starimageView.getBoundsInParent().getMinY()>=650)
                     {
                         if(obstacle_position[0]<=-401)
-                        starimageView.setVisible(true);
+                            starimageView.setVisible(true);
                         starimageView.setLayoutY(obstaclegroup.getLayoutY());
                     }
 
@@ -547,41 +547,54 @@ public class Game implements Serializable
 
                     for(Obstacle obstacle: getObstacles())
                     {
-                        if(ball.isJumping())
-                        {
-                            obstacle.getObstacleGroup().setLayoutY(obstacle.getObstacleGroup().getLayoutY() + 7);
-                        }
-                        if(obstacle.getObstacleGroup().getBoundsInParent().getMinY()>=650) {
-                            obstacle.getObstacleGroup().setLayoutY(obstacle_position[0]);
-                            obstacle_position[0] -= 1;
-                        }
+
+                    }
+                    if(ball.isJumping())
+                    {
+                        obstaclegroup.setLayoutY(obstaclegroup.getLayoutY() + 7);
+                    }
+                    if(obstaclegroup.getBoundsInParent().getMinY()>=650) {
+                        obstaclegroup.setLayoutY(obstacle_position[0]);
+                        obstacle_position[0] -= 1;
+                    }
+                    if(ball.isJumping())
+                    {
+                        obstaclegroup2.setLayoutY(obstaclegroup2.getLayoutY() + 7);
+                    }
+                    if(obstaclegroup2.getBoundsInParent().getMinY()>=650) {
+                        obstaclegroup2.setLayoutY(obstacle_position[0]);
+                        obstacle_position[0] -= 1;
                     }
 
-                    for(ColorSwitcher c: getColorSwitchers())
+                    if(ball.isJumping())
+                        colorswitcher_imageView.setLayoutY(colorswitcher_imageView.getLayoutY()+7);
+                    if(colorswitcher_imageView.getBoundsInParent().getMinY()>=650)
                     {
-                        if(ball.isJumping())
-                            c.getColorSwitcher().setLayoutY(c.getColorSwitcher().getLayoutY()+7);
-                        if(c.getColorSwitcher().getBoundsInParent().getMinY()>=650)
-                        {
-                            c.getColorSwitcher().setVisible(true);
-                            if(i[0]%2==0)
-                                c.getColorSwitcher().setLayoutY(obstaclegroup2.getLayoutY());
-                            else
-                                c.getColorSwitcher().setLayoutY(obstaclegroup2.getLayoutY()-50);
-                            if(i[0]%3==0)
-                                c.getColorSwitcher().setVisible(false);
-                            i[0]++;
-                        }
+                        colorswitcher_imageView.setVisible(true);
+                        if(i[0]%2==0)
+                            colorswitcher_imageView.setLayoutY(obstaclegroup2.getLayoutY());
+                        else
+                            colorswitcher_imageView.setLayoutY(obstaclegroup2.getLayoutY()-50);
+                        if(i[0]%3==0)
+                            colorswitcher_imageView.setVisible(false);
+                        i[0]++;
                     }
                 }
 
                 for(Star s: getStars()){
-                    if(s.getStarImageView().isVisible() && ball.getCircle().intersects(s.getStarImageView().getBoundsInParent()))
-                    {
-                        s.getStarImageView().setVisible(false);
-                        score++;
-                        score_value.setText(getScore()+"");
-                    }
+
+                }
+                if(starimageView.isVisible() && ball.getCircle().intersects(starimageView.getBoundsInParent()))
+                {
+                    starimageView.setVisible(false);
+                    score++;
+                    score_value.setText(getScore()+"");
+                }
+                if(starimageView2.isVisible() && ball.getCircle().intersects(starimageView2.getBoundsInParent()))
+                {
+                    starimageView2.setVisible(false);
+                    score++;
+                    score_value.setText(getScore()+"");
                 }
 
                 if(colorswitcher_imageView.isVisible() && ball.getCircle().intersects(colorswitcher_imageView.getBoundsInParent())){
@@ -923,45 +936,53 @@ public class Game implements Serializable
                         starimageView2.setLayoutY(obstaclegroup2.getLayoutY());
                     }
 
-                    for(Obstacle obstacle: getObstacles())
-                    {
+
                         if(ball.isJumping())
                         {
-                            obstacle.getObstacleGroup().setLayoutY(obstacle.getObstacleGroup().getLayoutY() + 7);
+                            obstaclegroup.setLayoutY(obstaclegroup.getLayoutY() + 7);
                         }
-                        if(obstacle.getObstacleGroup().getBoundsInParent().getMinY()>=650) {
-                            obstacle.getObstacleGroup().setLayoutY(obstacle_position[0]);
+                        if(obstaclegroup.getBoundsInParent().getMinY()>=650) {
+                            obstaclegroup.setLayoutY(obstacle_position[0]);
                             obstacle_position[0] -= 1;
                         }
+                    if(ball.isJumping())
+                    {
+                        obstaclegroup2.setLayoutY(obstaclegroup2.getLayoutY() + 7);
+                    }
+                    if(obstaclegroup2.getBoundsInParent().getMinY()>=650) {
+                        obstaclegroup2.setLayoutY(obstacle_position[0]);
+                        obstacle_position[0] -= 1;
                     }
 
-                    for(ColorSwitcher c: getColorSwitchers())
+                    if(ball.isJumping())
+                        colorswitcher_imageView.setLayoutY(colorswitcher_imageView.getLayoutY()+7);
+                    if(colorswitcher_imageView.getBoundsInParent().getMinY()>=650)
                     {
-                        if(ball.isJumping())
-                            c.getColorSwitcher().setLayoutY(c.getColorSwitcher().getLayoutY()+7);
-                        if(c.getColorSwitcher().getBoundsInParent().getMinY()>=650)
-                        {
-                            c.getColorSwitcher().setVisible(true);
-                            if(i[0]%2==0)
-                                c.getColorSwitcher().setLayoutY(obstaclegroup2.getLayoutY());
-                            else
-                                c.getColorSwitcher().setLayoutY(obstaclegroup2.getLayoutY()-50);
-                            if(i[0]%3==0)
-                                c.getColorSwitcher().setVisible(false);
-                            i[0]++;
-                        }
+                        colorswitcher_imageView.setVisible(true);
+                        if(i[0]%2==0)
+                            colorswitcher_imageView.setLayoutY(obstaclegroup2.getLayoutY());
+                        else
+                            colorswitcher_imageView.setLayoutY(obstaclegroup2.getLayoutY()-50);
+                        if(i[0]%3==0)
+                            colorswitcher_imageView.setVisible(false);
+                        i[0]++;
                     }
                 }
 
-                for(Star s: getStars())
-                {
-                    if(s.getStarImageView().isVisible() && ball.getCircle().intersects(s.getStarImageView().getBoundsInParent()))
+
+                    if(starimageView.isVisible() && ball.getCircle().intersects(starimageView.getBoundsInParent()))
                     {
-                        s.getStarImageView().setVisible(false);
+                        starimageView.setVisible(false);
                         score++;
                         score_value.setText(getScore()+"");
                     }
+                if(starimageView2.isVisible() && ball.getCircle().intersects(starimageView2.getBoundsInParent()))
+                {
+                    starimageView2.setVisible(false);
+                    score++;
+                    score_value.setText(getScore()+"");
                 }
+
 
                 if(colorswitcher_imageView.isVisible() &&
                         ball.getCircle().intersects(colorswitcher_imageView.getBoundsInParent()))
