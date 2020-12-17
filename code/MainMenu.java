@@ -1,7 +1,9 @@
 import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -10,12 +12,17 @@ import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.w3c.dom.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class MainMenu extends Application implements Serializable
@@ -79,6 +86,7 @@ public class MainMenu extends Application implements Serializable
         ImageView imageViewExit = new ImageView(exit);
         btnExitGame.setGraphic(imageViewExit);
         btnExitGame.setBackground(Background.EMPTY);
+
         btnNewGame.setOnAction(e->newGame(window));
         btnResumeGame.setOnAction(e->
         {
@@ -87,16 +95,21 @@ public class MainMenu extends Application implements Serializable
                 resumeGame();
             } catch (FileNotFoundException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (ClassNotFoundException classNotFoundException) {
+                classNotFoundException.printStackTrace();
             }
         });
         btnExitGame.setOnAction(e->exitGame());
 
         Button amisha=new Button();
+        Button questionmark=new Button();
         RotateTransition rotate = new RotateTransition();
         rotate.setAxis(Rotate.Z_AXIS);
         rotate.setByAngle(360);
         rotate.setCycleCount(Animation.INDEFINITE);
-        rotate.setDuration(Duration.millis(5000));
+        rotate.setDuration(Duration.millis(3000));
         rotate.setNode(amisha);
         rotate.play();
         ImageView imageViewGithub = new ImageView(new Image(new FileInputStream("assets/github.png")));
@@ -108,15 +121,6 @@ public class MainMenu extends Application implements Serializable
             getHostServices().showDocument("https://github.com/amishaagg/Color-Switch");
         });
 
-
-        Button questionmark=new Button();
-        rotate = new RotateTransition();
-        rotate.setAxis(Rotate.Z_AXIS);
-        rotate.setByAngle(360);
-        rotate.setCycleCount(Animation.INDEFINITE);
-        rotate.setDuration(Duration.millis(5000));
-        rotate.setNode(questionmark);
-        rotate.play();
         ImageView imageViewQuestionMark = new ImageView(new Image(new FileInputStream("assets/questionmark.png")));
         questionmark.setGraphic(imageViewQuestionMark);
         questionmark.setBackground(Background.EMPTY);
@@ -129,7 +133,7 @@ public class MainMenu extends Application implements Serializable
         btnMusic.setGraphic(imageViewMusic);
         btnMusic.setBackground(Background.EMPTY);
 
-        String musicFile = "staythenight.mp3";
+        String musicFile = "music/background_theme.mp3";
         Media sound = new Media(new File(musicFile).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         //mediaPlayer.setAutoPlay(true);
@@ -146,6 +150,30 @@ public class MainMenu extends Application implements Serializable
                 btnMusic.setGraphic(imageViewMusic);
             }
         });
+
+        rotate = new RotateTransition();
+        rotate.setAxis(Rotate.Z_AXIS);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(Animation.INDEFINITE);
+        rotate.setDuration(Duration.millis(3000));
+        rotate.setNode(questionmark);
+        rotate.play();
+
+        rotate = new RotateTransition();
+        rotate.setAxis(Rotate.Z_AXIS);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(Animation.INDEFINITE);
+        rotate.setDuration(Duration.millis(3000));
+        rotate.setNode(btnMusic);
+        rotate.play();
+
+        rotate = new RotateTransition();
+        rotate.setAxis(Rotate.Z_AXIS);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(Animation.INDEFINITE);
+        rotate.setDuration(Duration.millis(3000));
+        rotate.setNode(btnExitGame);
+        rotate.play();
 
         Image image = new Image(new FileInputStream("assets/mainmenu.png"));
         ImageView imageView = new ImageView(image);
@@ -172,8 +200,7 @@ public class MainMenu extends Application implements Serializable
         window.show();
     }
 
-    public void resumeGame() throws FileNotFoundException
-    {
+    public void resumeGame() throws IOException, ClassNotFoundException {
         btnreturn=new Button();
         Stage stage = new Stage();
         Image home = new Image(new FileInputStream("assets/resume_home.png"));
@@ -216,24 +243,91 @@ public class MainMenu extends Application implements Serializable
         game5.setBackground(Background.EMPTY);
         game5.setLayoutX(-10);
         game5.setLayoutY(290);
+
         game1.setOnAction(e->{
             deserialise("file.bin");
+            stage.close();
         });
         game2.setOnAction(e->{
-            deserialise("file2.bin");
+            deserialise("file1.bin");
+            stage.close();
         });
         game3.setOnAction(e->{
-            deserialise("file3.bin");
+            deserialise("file2.bin");
+            stage.close();
         });
         game4.setOnAction(e->{
-            deserialise("file4.bin");
+            deserialise("file3.bin");
+            stage.close();
         });
         game5.setOnAction(e->{
-            deserialise("file5.bin");
+            deserialise("file4.bin");
+            stage.close();
         });
+
+        Text score1 = new Text(10.0, 20.0, "");
+        score1.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        score1.setFill(Color.WHITE);
+        Text score2 = new Text(10.0, 20.0, "");
+        score2.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        score2.setFill(Color.WHITE);
+        Text score3 = new Text(10.0, 20.0, "");
+        score3.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        score3.setFill(Color.WHITE);
+        Text score4 = new Text(10.0, 20.0, "");
+        score4.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        score4.setFill(Color.WHITE);
+        Text score5 = new Text(10.0, 20.0, "");
+        score5.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        score5.setFill(Color.WHITE);
+
         Group layout2=new Group();
         layout2.getChildren().addAll(imageViewChoose, btnreturn);
         layout2.getChildren().addAll(game1, game2, game3, game4, game5);
+
+        FileInputStream file;
+        try {
+            file = new FileInputStream("file.bin");
+        }catch (FileNotFoundException e)
+        {
+            layout2.getChildren().removeAll(game1, game2, game3, game4, game5);
+        }
+        try {
+            file = new FileInputStream("file1.bin");
+        }catch (FileNotFoundException e)
+        {
+            layout2.getChildren().removeAll(game2, game3, game4, game5);
+        }
+        try {
+            file = new FileInputStream("file2.bin");
+        }catch (FileNotFoundException e)
+        {
+            layout2.getChildren().removeAll(game3, game4, game5);
+        }
+        try {
+            file = new FileInputStream("fil3.bin");
+        }catch (FileNotFoundException e)
+        {
+            layout2.getChildren().removeAll(game4, game5);
+        }
+        try {
+            file = new FileInputStream("file4.bin");
+        }catch (FileNotFoundException e)
+        {
+            layout2.getChildren().removeAll(game5);
+        }
+
+        if(layout2.getChildren().contains(game1))
+            setStarInResumeGame("file.bin", game1, layout2);
+        if(layout2.getChildren().contains(game2))
+            setStarInResumeGame("file1.bin", game2, layout2);
+        if(layout2.getChildren().contains(game3))
+            setStarInResumeGame("file2.bin", game3, layout2);
+        if(layout2.getChildren().contains(game4))
+            setStarInResumeGame("file3.bin", game4, layout2);
+        if(layout2.getChildren().contains(game5))
+            setStarInResumeGame("file4.bin", game5, layout2);
+
         scene2=new Scene(layout2,250,250);
         scene2.setFill(Color.rgb(40,40,40));
         stage.setScene(scene2);
@@ -245,6 +339,21 @@ public class MainMenu extends Application implements Serializable
             stage.close();
             window.show();
         });
+    }
+
+    public void setStarInResumeGame(String file, Button btn, Group layout2) throws IOException, ClassNotFoundException
+    {
+        Game object1;
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+        // Method for deserialization of object
+        object1 = (Game)in.readObject();
+        in.close();
+        Text score = new Text(10, 30, object1.getScore()+"");
+        score.setFont(Font.font("Verdana", FontWeight.BOLD,  30));
+        score.setFill(Color.WHITE);
+        score.setLayoutY(btn.getLayoutY()+10);
+        score.setLayoutX(btn.getLayoutX()+330);
+        layout2.getChildren().add(score);
     }
 
     public static void main(String[] args) {
