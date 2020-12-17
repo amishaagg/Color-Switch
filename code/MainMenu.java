@@ -96,6 +96,7 @@ public class MainMenu extends Application implements Serializable
         Media sound = new Media(new File(musicFile).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         //mediaPlayer.setAutoPlay(true);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayer.play();
         btnMusic.setOnAction(e->
         {
