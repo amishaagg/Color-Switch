@@ -1,3 +1,5 @@
+import javafx.animation.Animation;
+import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -8,7 +10,10 @@ import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -86,6 +91,38 @@ public class MainMenu extends Application implements Serializable
         });
         btnExitGame.setOnAction(e->exitGame());
 
+        Button amisha=new Button();
+        RotateTransition rotate = new RotateTransition();
+        rotate.setAxis(Rotate.Z_AXIS);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(Animation.INDEFINITE);
+        rotate.setDuration(Duration.millis(5000));
+        rotate.setNode(amisha);
+        rotate.play();
+        ImageView imageViewGithub = new ImageView(new Image(new FileInputStream("assets/github.png")));
+        amisha.setGraphic(imageViewGithub);
+        amisha.setBackground(Background.EMPTY);
+        amisha.setLayoutX(100.0);
+        amisha.setLayoutY(550.0);
+        amisha.setOnAction(e->{
+            getHostServices().showDocument("https://github.com/amishaagg/Color-Switch");
+        });
+
+
+        Button questionmark=new Button();
+        rotate = new RotateTransition();
+        rotate.setAxis(Rotate.Z_AXIS);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(Animation.INDEFINITE);
+        rotate.setDuration(Duration.millis(5000));
+        rotate.setNode(questionmark);
+        rotate.play();
+        ImageView imageViewQuestionMark = new ImageView(new Image(new FileInputStream("assets/questionmark.png")));
+        questionmark.setGraphic(imageViewQuestionMark);
+        questionmark.setBackground(Background.EMPTY);
+        questionmark.setLayoutX(200.0);
+        questionmark.setLayoutY(550.0);
+
         Button btnMusic = new Button();
         ImageView imageViewMusic = new ImageView(new Image(new FileInputStream("assets/music.png")));
         ImageView imageViewNoMusic = new ImageView(new Image(new FileInputStream("assets/no_music.png")));
@@ -119,7 +156,7 @@ public class MainMenu extends Application implements Serializable
         window.setHeight(700);
         window.setWidth(400);
         Group layout1 = new Group(imageView);
-        layout1.getChildren().addAll(btnNewGame,btnResumeGame,btnExitGame,btnMusic);
+        layout1.getChildren().addAll(btnNewGame,btnResumeGame,btnExitGame,btnMusic,amisha,questionmark);
         btnNewGame.setPrefWidth(80);
         btnNewGame.setLayoutX(160);
         btnNewGame.setLayoutY(300);
@@ -234,8 +271,6 @@ public class MainMenu extends Application implements Serializable
             Game game=new Game();
             game.savedGame(window,object1.getScore(),object1.getStars(),object1.getObstacles()
                     ,object1.getBall(),object1.getColorSwitchers(),object1.getMyfinger());
-
-
         }
         catch(IOException ex)
         {
