@@ -305,7 +305,7 @@ public class MainMenu extends Application implements Serializable
             layout2.getChildren().removeAll(game3, game4, game5);
         }
         try {
-            file = new FileInputStream("fil3.bin");
+            file = new FileInputStream("file3.bin");
         }catch (FileNotFoundException e)
         {
             layout2.getChildren().removeAll(game4, game5);
