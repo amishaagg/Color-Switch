@@ -131,9 +131,17 @@ public class Game implements Serializable
             fadeTransition.setToValue(0);
             fadeTransition.play();
 
-            Scanner sc = new Scanner(new File("count.txt"));
-            int current_count = Integer.parseInt(sc.next());
-            BufferedWriter writer = new BufferedWriter(new FileWriter("highscore.txt"));
+            Scanner sc = null;
+            try {
+                sc = new Scanner(new File("count.txt"));
+                int current_count = Integer.parseInt(sc.next());
+                BufferedWriter writer = new BufferedWriter(new FileWriter("highscore.txt"));
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+
 
             String filename="file.bin";
             String filename2="file2.bin";
@@ -186,6 +194,13 @@ public class Game implements Serializable
         Font font = Font.font("Verdana", FontWeight.NORMAL,  30);
         current_score.setFont(font);
         current_score.setFill(Color.WHITE);
+
+        ImageView not_enough_stars = new ImageView(new Image(new FileInputStream("assets/no_stars.png")));
+        not_enough_stars.setVisible(false);
+        not_enough_stars.setLayoutY(480);
+        not_enough_stars.setLayoutX(45);
+
+
         Scanner sc = new Scanner(new File("highscore.txt"));
         int Highest_score = Integer.parseInt(sc.next());
         if(getScore() > Highest_score)
@@ -219,14 +234,29 @@ public class Game implements Serializable
         });
         continue_using_stars.setOnAction(e->
         {
+            if(getScore()>=5)
+            {
+                timer.start();
+                setScore(getScore()-5);
+                ball.setJumping(false);
+                if(ball.getCircle().getCenterY()>=650)
+                    ball.getCircle().setCenterY(550);
+                else
+                    ball.getCircle().setCenterY(ball.getCircle().getCenterY() + 50);
+                GameStage.setScene(scene1);
+            }
+            else
+            {
+                not_enough_stars.setVisible(true);
+                FadeTransition fadeTransition = new FadeTransition(Duration.millis(2000), not_enough_stars);
+                fadeTransition.setFromValue(10);
+                fadeTransition.setToValue(0);
+                fadeTransition.play();
+            }
 
-            timer.start();
-            //gameOverWindow.close();
-            ball.getCircle().setCenterY(ball.getCircle().getCenterY()+50);
-            GameStage.setScene(scene1);
         });
         group.getChildren().addAll(restart, home, continue_using_stars, scoreImageView, HighScoreImageView);
-        group.getChildren().addAll(current_score, high_score);
+        group.getChildren().addAll(current_score, high_score,not_enough_stars);
         restart.setLayoutX(105);
         restart.setLayoutY(330);
         continue_using_stars.setLayoutX(65);
@@ -975,11 +1005,9 @@ public class Game implements Serializable
         //obstaclegroup.setLayoutY(obstaclegroup.getLayoutY()-400);
         btnPause.setOnAction(e-> {
             try {
-                myfinger.setVisible(myfinger.getFingerImageView().isVisible());
-                myfinger.setX(myfinger.getFingerImageView().getX());
-                myfinger.setY(myfinger.getFingerImageView().getY());
-
-//                Group obsGroup = getObstacles().get(0).getObstacleGroup();
+                myfinger.setVisible(fingerImageView.isVisible());
+                myfinger.setX(fingerImageView.getLayoutX());
+                myfinger.setY(fingerImageView.getLayoutY());
                 ArrayList<Double> positions=new ArrayList<>();
                 positions.add(obstaclegroup.getLayoutX());
                 positions.add(obstaclegroup.getLayoutY());
@@ -987,25 +1015,28 @@ public class Game implements Serializable
                 System.out.println("OBs group X= "+obstaclegroup.getLayoutX());
                 System.out.println("OBs group Y= "+obstaclegroup.getLayoutY());
                 getObstacles().get(0).setCoordinates(positions);
-                positions=new ArrayList<>();
-                positions.add(obstaclegroup2.getLayoutX());
-                positions.add(obstaclegroup2.getLayoutY());
-                positions.add(obstaclegroup2.getRotate());
+                ArrayList<Double> positions2=new ArrayList<>();
+                positions2.add(obstaclegroup2.getLayoutX());
+                positions2.add(obstaclegroup2.getLayoutY());
+                positions2.add(obstaclegroup2.getRotate());
                 System.out.println("OBs group2 X= "+obstaclegroup2.getLayoutX());
                 System.out.println("OBs group2 Y= "+obstaclegroup2.getLayoutY());
-                getObstacles().get(1).setCoordinates(positions);
-
+                getObstacles().get(1).setCoordinates(positions2);
                 ImageView img=colorswitcher_imageView;
                 getColorSwitchers().get(0).setX(img.getX());
                 getColorSwitchers().get(0).setY(img.getY());
                 getColorSwitchers().get(0).setVisible(img.isVisible());
 
-                for(Star s:getStars()){
-                    img=s.getStarImageView();
-                    s.setX(img.getX());
-                    s.setY(img.getY());
-                    s.setVisible(img.isVisible());
-                }
+                img=starimageView;
+                getStars().get(0).setX(img.getX());
+                getStars().get(0).setY(img.getY());
+                getStars().get(0).setVisible(img.isVisible());
+
+                ImageView img2=starimageView2;
+                getStars().get(1).setX(img2.getX());
+                getStars().get(1).setY(img2.getY());
+                getStars().get(1).setVisible(img2.isVisible());
+
                 Circle circ=ball.getCircle();
                 ball.setX(circ.getCenterX());
                 ball.setY(circ.getCenterY());
@@ -1015,6 +1046,7 @@ public class Game implements Serializable
             } catch (FileNotFoundException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
             }
+
         });
         scene1.setFill(Color.rgb(40,40,40));
         window.setScene(scene1);
