@@ -440,8 +440,6 @@ public class Game implements Serializable
         ImageView fingerImageView = new ImageView(new Image(new FileInputStream("assets/finger.png")));
         fingerImageView.setLayoutY(565);
         fingerImageView.setLayoutX(135);
-        System.out.println("Finger X= "+fingerImageView.getLayoutX());
-        System.out.println("Finger Y= "+fingerImageView.getLayoutY());
         myfinger=new Finger(fingerImageView);
 
         Text highScore_broken_text = new Text(10.0, 30.0, "NEW HIGH-SCORE!");
@@ -553,7 +551,7 @@ public class Game implements Serializable
                         myfinger.getFingerImageView().setLayoutY(myfinger.getFingerImageView().getLayoutY()+7);
                     if(starimageView.getBoundsInParent().getMinY()>=650)
                     {
-                        if(obstacle_position<=-401)
+                        if(obstacle_position<-401)
                             starimageView.setVisible(true);
                         starimageView.setLayoutY(obstaclegroup.getLayoutY());
                     }
@@ -662,15 +660,11 @@ public class Game implements Serializable
                 positions.add(obstaclegroup.getLayoutX());
                 positions.add(obstaclegroup.getLayoutY());
                 positions.add(obstaclegroup.getRotate());
-                System.out.println("OBs group X= "+obstaclegroup.getLayoutX());
-                System.out.println("OBs group Y= "+obstaclegroup.getLayoutY());
                 getObstacles().get(0).setCoordinates(positions);
                 ArrayList<Double> positions2=new ArrayList<>();
                 positions2.add(obstaclegroup2.getLayoutX());
                 positions2.add(obstaclegroup2.getLayoutY());
                 positions2.add(obstaclegroup2.getRotate());
-                System.out.println("OBs group2 X= "+obstaclegroup2.getLayoutX());
-                System.out.println("OBs group2 Y= "+obstaclegroup2.getLayoutY());
                 getObstacles().get(1).setCoordinates(positions2);
                 ImageView img=colorswitcher_imageView;
                 getColorSwitchers().get(0).setX(img.getX());
@@ -807,7 +801,6 @@ public class Game implements Serializable
         rectangle4.setFill(Color.rgb(50, 219, 240));
         rectangle4.setId("cyan");
         Group obstaclegroup2 = new Group(rectangle, rectangle2, rectangle3, rectangle4);
-        System.out.println(this.obstacles.get(1).getType());
         X=this.obstacles.get(1).getCoordinates().get(0);
         Y=this.obstacles.get(1).getCoordinates().get(1);
         Rotation=this.obstacles.get(1).getCoordinates().get(2);
@@ -837,7 +830,6 @@ public class Game implements Serializable
         }
         this.ball.setCircle(circle);
         ball.setJumping(false);
-        System.out.println("ball is "+ ball.isJumping());
 
         this.colorSwitchers=colorswitchers2;
         ImageView colorswitcher_imageView = new ImageView(new Image(new FileInputStream("assets/ColorSwitcher.png")));
@@ -960,7 +952,7 @@ public class Game implements Serializable
                         myfinger.getFingerImageView().setLayoutY(myfinger.getFingerImageView().getLayoutY()+7);
                     if(starimageView.getBoundsInParent().getMinY()>=650)
                     {
-                        if(obstacle_position<=-401)
+                        if(obstacle_position<-401)
                             starimageView.setVisible(true);
                         starimageView.setLayoutY(obstaclegroup.getLayoutY());
                     }
@@ -1071,15 +1063,11 @@ public class Game implements Serializable
                 positions.add(obstaclegroup.getLayoutX());
                 positions.add(obstaclegroup.getLayoutY());
                 positions.add(obstaclegroup.getRotate());
-                System.out.println("OBs group X= "+obstaclegroup.getLayoutX());
-                System.out.println("OBs group Y= "+obstaclegroup.getLayoutY());
                 getObstacles().get(0).setCoordinates(positions);
                 ArrayList<Double> positions2=new ArrayList<>();
                 positions2.add(obstaclegroup2.getLayoutX());
                 positions2.add(obstaclegroup2.getLayoutY());
                 positions2.add(obstaclegroup2.getRotate());
-                System.out.println("OBs group2 X= "+obstaclegroup2.getLayoutX());
-                System.out.println("OBs group2 Y= "+obstaclegroup2.getLayoutY());
                 getObstacles().get(1).setCoordinates(positions2);
                 ImageView img=colorswitcher_imageView;
                 getColorSwitchers().get(0).setX(img.getX());
@@ -1118,7 +1106,6 @@ public class Game implements Serializable
             out.writeObject(this);
             out.close();
             file.close();
-            System.out.println("Object has been serialized");
         }
         catch(IOException ex){
             ex.printStackTrace();
