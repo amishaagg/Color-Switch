@@ -16,14 +16,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.w3c.dom.*;
-
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
-
 
 public class MainMenu extends Application implements Serializable
 {
@@ -127,6 +124,14 @@ public class MainMenu extends Application implements Serializable
         questionmark.setLayoutX(200.0);
         questionmark.setLayoutY(550.0);
 
+        questionmark.setOnAction(e-> {
+            try {
+                DeveloperDetails();
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+        });
+
         Button btnMusic = new Button();
         ImageView imageViewMusic = new ImageView(new Image(new FileInputStream("assets/music.png")));
         ImageView imageViewNoMusic = new ImageView(new Image(new FileInputStream("assets/no_music.png")));
@@ -198,6 +203,20 @@ public class MainMenu extends Application implements Serializable
         scene1=new Scene(layout1,300,300);
         window.setScene(scene1);
         window.show();
+    }
+
+    public void DeveloperDetails() throws FileNotFoundException
+    {
+        Stage stage=new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        Group group = new Group();
+        Scene scene = new Scene(group);
+        ImageView imageView = new ImageView(new Image(new FileInputStream("assets/DeveloperImg.png")));
+        group.getChildren().add(imageView);
+        stage.setScene(scene);
+        stage.setHeight(500);
+        stage.setWidth(300);
+        stage.showAndWait();
     }
 
     public void resumeGame() throws IOException, ClassNotFoundException {
@@ -379,7 +398,8 @@ public class MainMenu extends Application implements Serializable
             System.out.println("Star Y"+object1.getStars().get(0).getY());
             Game game=new Game();
             game.savedGame(window,object1.getScore(),object1.getStars(),object1.getObstacles()
-                    ,object1.getBall(),object1.getColorSwitchers(),object1.getMyfinger());
+                    ,object1.getBall(),object1.getColorSwitchers(),object1.getMyfinger()
+                    /*, object1.getObstacle_position(), object1.getI(), object1.getSpeed(), object1.getObstacle_speed()*/);
         }
         catch(IOException ex)
         {
