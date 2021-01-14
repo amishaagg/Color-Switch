@@ -1,4 +1,4 @@
-# Plants vs Zombies
+# COLORSWITCH
 ## Details
 ### Created by: [Amisha Aggarwal](https://github.com/amishaagg) and [Yash Tanwar](https://github.com/KingYashTanwar)
 This is a clone of the video game, [Color Switch](https://colorswitch.co/), originally developed by Fortafy Games.
