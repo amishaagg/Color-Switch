@@ -27,4 +27,4 @@ Uses Java and JavaFx.
 * Uses object oriented programming
 
 ## Screenshots from the game
-![1](https://github.com/amishaagg/Color-Switch/blob/main/assets/Screenshots%20of%20game/Screenshot%20(100).png?raw=true)
+![1](https://github.com/amishaagg/Color-Switch/blob/main/assets/Screenshots%20of%20game/Screenshot%20(95).png?raw=true)
