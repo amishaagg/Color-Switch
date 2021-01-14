@@ -28,3 +28,9 @@ Uses Java and JavaFx.
 
 ## Screenshots from the game
 ![1](https://github.com/amishaagg/Color-Switch/blob/main/assets/Screenshots%20of%20game/Screenshot%20(95).png?raw=true)
+![1](https://github.com/amishaagg/Color-Switch/blob/main/assets/Screenshots%20of%20game/Screenshot%20(97).png?raw=true)
+![1](https://github.com/amishaagg/Color-Switch/blob/main/assets/Screenshots%20of%20game/Screenshot%20(101).png?raw=true)
+![1](https://github.com/amishaagg/Color-Switch/blob/main/assets/Screenshots%20of%20game/Screenshot%20(100).png?raw=true)
+![1](https://github.com/amishaagg/Color-Switch/blob/main/assets/Screenshots%20of%20game/Screenshot%20(105).png?raw=true)
+![1](https://github.com/amishaagg/Color-Switch/blob/main/assets/Screenshots%20of%20game/Screenshot%20(106).png?raw=true)
+![1](https://github.com/amishaagg/Color-Switch/blob/main/assets/Screenshots%20of%20game/Screenshot%20(107).png?raw=true)
